@@ -10,9 +10,9 @@ import joblib
 def build_benchmark(benchmark_directory: Path) -> int:
     temnp_dir = tempfile.TemporaryDirectory()
     benchmark_name = benchmark_directory.stem
-    benchmark_name_c = benchmark_name.replace('-', '_')
+    benchmark_name_c = benchmark_name.replace("-", "_")
     shutil.copy(benchmark_directory / (benchmark_name + ".cpp"), temnp_dir.name)
-    
+
     print(f"Building {benchmark_name}: {temnp_dir}")
 
     tcl_script = temnp_dir.name + "/build.tcl"

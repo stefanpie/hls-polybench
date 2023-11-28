@@ -1,10 +1,10 @@
+import argparse
 import os
-from pathlib import Path
 import re
+import shutil
 import sys
 import tarfile
-import shutil
-import argparse
+from pathlib import Path
 
 from pcpp.pcmd import CmdPreprocessor
 
@@ -109,6 +109,7 @@ def add_to_top(c_fp: Path, text: str):
 
 RE_DECIMAL = re.compile(r"(?:[0-9]*?)\.(?:[0-9]+)")
 
+
 def cast_decimal_to_ap_fixed(c_fp: Path):
     c_text = c_fp.read_text()
     offset = 0
@@ -155,7 +156,9 @@ def process_benchmark_header(h_fp: Path):
                 new_lines.append(new_line)
                 continue
             if "define POW_FUN(x,y) powf(x,y)" in line:
-                new_line = line.replace("powf(x,y)", "hls::pow((t_ap_fixed)(x),(t_ap_fixed)(y))")
+                new_line = line.replace(
+                    "powf(x,y)", "hls::pow((t_ap_fixed)(x),(t_ap_fixed)(y))"
+                )
                 new_lines.append(new_line)
                 continue
         elif "DATA_TYPE float" in line:
