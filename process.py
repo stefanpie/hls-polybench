@@ -260,21 +260,6 @@ def main(args):
         raise ValueError("Could not find CFLAGS line")
     main_config_make_fp.write_text(main_config_make_text)
 
-    # p = subprocess.run(
-    #     ["perl", "./utilities/run-all.pl", "."],
-    #     cwd=tmp_dir,
-    #     capture_output=True,
-    #     text=True,
-    # )
-
-    # if p.returncode != 0:
-    #     print(p.stderr)
-    #     print(p.stdout)
-    #     raise RuntimeError("Failed to run run-all.pl")
-    # else:
-    #     print(p.stdout)
-    #     exit()
-
     makefiles_fps = list(tmp_dir.rglob("Makefile"))
 
     def compile_design(makefile_fp: Path):
