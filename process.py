@@ -2,10 +2,12 @@ import argparse
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tarfile
 from pathlib import Path
 
+from joblib import Parallel, delayed
 from pcpp.pcmd import CmdPreprocessor
 
 
@@ -226,6 +228,108 @@ def main(args):
     fp_polybench_h = fp_utils / "polybench.h"
     fp_polybench_c = fp_utils / "polybench.c"
 
+    # build and run all benchmarks
+    # capture std out
+
+    p = subprocess.run(
+        ["perl", "./utilities/makefile-gen.pl", ".", "-cfg"],
+        cwd=tmp_dir,
+        capture_output=True,
+        text=True,
+    )
+
+    if p.returncode != 0:
+        print(p.stderr)
+        print(p.stdout)
+        raise RuntimeError("Failed to run makefile-gen.pl")
+    else:
+        print(p.stdout)
+
+    main_config_make_fp = tmp_dir / "config.mk"
+    main_config_make_text = main_config_make_fp.read_text()
+    main_config_make_text = main_config_make_text.replace("CFLAGS=-O2", "CFLAGS=-O3")
+    main_config_make_text = main_config_make_text.replace(
+        "-DPOLYBENCH_USE_C99_PROTO", ""
+    )
+    # find line that starts with CFLAGS and append -DMINI_DATASET to end of it
+    for line in main_config_make_text.splitlines():
+        if line.startswith("CFLAGS"):
+            main_config_make_text = line + " -DMINI_DATASET"
+            break
+    else:
+        raise ValueError("Could not find CFLAGS line")
+    main_config_make_fp.write_text(main_config_make_text)
+
+    # p = subprocess.run(
+    #     ["perl", "./utilities/run-all.pl", "."],
+    #     cwd=tmp_dir,
+    #     capture_output=True,
+    #     text=True,
+    # )
+
+    # if p.returncode != 0:
+    #     print(p.stderr)
+    #     print(p.stdout)
+    #     raise RuntimeError("Failed to run run-all.pl")
+    # else:
+    #     print(p.stdout)
+    #     exit()
+
+    makefiles_fps = list(tmp_dir.rglob("Makefile"))
+
+    def compile_design(makefile_fp: Path):
+        design_dir = makefile_fp.parent
+        design_name = design_dir.name
+        print(f"Compiling {design_dir} : {design_name}")
+        p = subprocess.run(
+            ["make", "clean"],
+            cwd=design_dir,
+            capture_output=True,
+            text=True,
+        )
+        if p.returncode != 0:
+            print(p.stderr)
+            print(p.stdout)
+            raise RuntimeError("Failed to run make")
+        p = subprocess.run(
+            ["make"],
+            cwd=design_dir,
+            capture_output=True,
+            text=True,
+        )
+        if p.returncode != 0:
+            print(p.stderr)
+            print(p.stdout)
+            raise RuntimeError("Failed to run make")
+
+    # for makefile_fp in makefiles_fps:
+    #     compile_design(makefile_fp)
+    Parallel(n_jobs=1)(
+        delayed(compile_design)(makefile_fp) for makefile_fp in makefiles_fps
+    )
+
+    def run_design(makefile_fp: Path):
+        design_dir = makefile_fp.parent
+        design_name = design_dir.name
+        print(f"Running {design_dir} : {design_name}")
+        p = subprocess.run(
+            [f"./{design_name}"],
+            cwd=design_dir,
+            capture_output=True,
+            text=True,
+        )
+        if p.returncode != 0:
+            print(p.stderr)
+            print(p.stdout)
+            raise RuntimeError("Failed to run design")
+
+        tb_golden_output_fp = makefile_fp.parent / "tb_data.txt"
+        tb_golden_output_fp.write_text(p.stderr)
+
+    Parallel(n_jobs=8)(
+        delayed(run_design)(makefile_fp) for makefile_fp in makefiles_fps
+    )
+
     benchmark_list_fp = fp_utils / "benchmark_list"
     benchmark_list = [
         Path(line.strip()) for line in benchmark_list_fp.read_text().splitlines()
@@ -246,6 +350,9 @@ def main(args):
             shutil.copy(file, new_benchmark_dir)
         shutil.copy(fp_polybench_h, new_benchmark_dir)
         shutil.copy(fp_polybench_c, new_benchmark_dir)
+
+        tb_data_original_fp = fp_benchmark.parent / "tb_data.txt"
+        shutil.copy(tb_data_original_fp, new_benchmark_dir)
 
         h_file = new_benchmark_dir / (benchmark_name + ".h")
         process_benchmark_header(h_file)
