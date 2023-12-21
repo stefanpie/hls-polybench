@@ -1,20 +1,8 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef char base;
+#include "nussinov.h"
 
 
-
-
-
-
-
-
-
-
-
-void kernel_nussinov(int n, base seq[ 2500 + 0],
-			   int table[ 2500 + 0][2500 + 0])
+void kernel_nussinov(int n, char seq[ 500 + 0],
+			   int table[ 500 + 0][500 + 0])
 {
   int i, j, k;
 

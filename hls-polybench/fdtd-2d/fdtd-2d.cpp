@@ -1,24 +1,13 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "fdtd-2d.h"
 
 
 void kernel_fdtd_2d(int tmax,
 		    int nx,
 		    int ny,
-		    t_ap_fixed ex[ 1000 + 0][1200 + 0],
-		    t_ap_fixed ey[ 1000 + 0][1200 + 0],
-		    t_ap_fixed hz[ 1000 + 0][1200 + 0],
-		    t_ap_fixed _fict_[ 500 + 0])
+		    t_ap_fixed ex[ 200 + 0][240 + 0],
+		    t_ap_fixed ey[ 200 + 0][240 + 0],
+		    t_ap_fixed hz[ 200 + 0][240 + 0],
+		    t_ap_fixed _fict_[ 100 + 0])
 {
   int t, i, j;
 

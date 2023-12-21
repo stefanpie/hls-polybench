@@ -1,23 +1,12 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "correlation.h"
 
 
 void kernel_correlation(int m, int n,
 			t_ap_fixed float_n,
-			t_ap_fixed data[ 1400 + 0][1200 + 0],
-			t_ap_fixed corr[ 1200 + 0][1200 + 0],
-			t_ap_fixed mean[ 1200 + 0],
-			t_ap_fixed stddev[ 1200 + 0])
+			t_ap_fixed data[ 260 + 0][240 + 0],
+			t_ap_fixed corr[ 240 + 0][240 + 0],
+			t_ap_fixed mean[ 240 + 0],
+			t_ap_fixed stddev[ 240 + 0])
 {
   int i, j, k;
 
@@ -40,7 +29,6 @@ void kernel_correlation(int m, int n,
         stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
       stddev[j] /= float_n;
       stddev[j] = hls::sqrt(stddev[j]);
-
 
 
       stddev[j] = stddev[j] <= eps ? (t_ap_fixed)1.0 : stddev[j];

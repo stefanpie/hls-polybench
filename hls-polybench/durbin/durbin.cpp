@@ -1,22 +1,11 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "durbin.h"
 
 
 void kernel_durbin(int n,
-		   t_ap_fixed r[ 2000 + 0],
-		   t_ap_fixed y[ 2000 + 0])
+		   t_ap_fixed r[ 400 + 0],
+		   t_ap_fixed y[ 400 + 0])
 {
- t_ap_fixed z[2000];
+ t_ap_fixed z[400];
  t_ap_fixed alpha;
  t_ap_fixed beta;
  t_ap_fixed sum;

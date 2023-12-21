@@ -1,25 +1,14 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "gesummv.h"
 
 
 void kernel_gesummv(int n,
 		    t_ap_fixed alpha,
 		    t_ap_fixed beta,
-		    t_ap_fixed A[ 1300 + 0][1300 + 0],
-		    t_ap_fixed B[ 1300 + 0][1300 + 0],
-		    t_ap_fixed tmp[ 1300 + 0],
-		    t_ap_fixed x[ 1300 + 0],
-		    t_ap_fixed y[ 1300 + 0])
+		    t_ap_fixed A[ 250 + 0][250 + 0],
+		    t_ap_fixed B[ 250 + 0][250 + 0],
+		    t_ap_fixed tmp[ 250 + 0],
+		    t_ap_fixed x[ 250 + 0],
+		    t_ap_fixed y[ 250 + 0])
 {
   int i, j;
 

@@ -1,21 +1,10 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "trmm.h"
 
 
 void kernel_trmm(int m, int n,
 		 t_ap_fixed alpha,
-		 t_ap_fixed A[ 1000 + 0][1000 + 0],
-		 t_ap_fixed B[ 1000 + 0][1200 + 0])
+		 t_ap_fixed A[ 200 + 0][200 + 0],
+		 t_ap_fixed B[ 200 + 0][240 + 0])
 {
   int i, j, k;
   for (i = 0; i < m; i++)

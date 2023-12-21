@@ -1,2 +1,6 @@
 .vscode
 .mypy_cache
+
+test_temp/
+errors/
+output/

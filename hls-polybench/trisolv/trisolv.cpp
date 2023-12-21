@@ -1,21 +1,10 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "trisolv.h"
 
 
 void kernel_trisolv(int n,
-		    t_ap_fixed L[ 2000 + 0][2000 + 0],
-		    t_ap_fixed x[ 2000 + 0],
-		    t_ap_fixed b[ 2000 + 0])
+		    t_ap_fixed L[ 400 + 0][400 + 0],
+		    t_ap_fixed x[ 400 + 0],
+		    t_ap_fixed b[ 400 + 0])
 {
   int i, j;
 

@@ -1,29 +1,18 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "gemver.h"
 
 
 void kernel_gemver(int n,
 		   t_ap_fixed alpha,
 		   t_ap_fixed beta,
-		   t_ap_fixed A[ 2000 + 0][2000 + 0],
-		   t_ap_fixed u1[ 2000 + 0],
-		   t_ap_fixed v1[ 2000 + 0],
-		   t_ap_fixed u2[ 2000 + 0],
-		   t_ap_fixed v2[ 2000 + 0],
-		   t_ap_fixed w[ 2000 + 0],
-		   t_ap_fixed x[ 2000 + 0],
-		   t_ap_fixed y[ 2000 + 0],
-		   t_ap_fixed z[ 2000 + 0])
+		   t_ap_fixed A[ 400 + 0][400 + 0],
+		   t_ap_fixed u1[ 400 + 0],
+		   t_ap_fixed v1[ 400 + 0],
+		   t_ap_fixed u2[ 400 + 0],
+		   t_ap_fixed v2[ 400 + 0],
+		   t_ap_fixed w[ 400 + 0],
+		   t_ap_fixed x[ 400 + 0],
+		   t_ap_fixed y[ 400 + 0],
+		   t_ap_fixed z[ 400 + 0])
 {
   int i, j;
 

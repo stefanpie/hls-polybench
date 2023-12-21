@@ -1,22 +1,11 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "syrk.h"
 
 
 void kernel_syrk(int n, int m,
 		 t_ap_fixed alpha,
 		 t_ap_fixed beta,
-		 t_ap_fixed C[ 1200 + 0][1200 + 0],
-		 t_ap_fixed A[ 1200 + 0][1000 + 0])
+		 t_ap_fixed C[ 240 + 0][240 + 0],
+		 t_ap_fixed A[ 240 + 0][200 + 0])
 {
   int i, j, k;
   for (i = 0; i < n; i++) {

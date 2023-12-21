@@ -1,0 +1,50 @@
+
+****** Vitis HLS - High-Level Synthesis from C, C++ and OpenCL v2023.1.1 (64-bit)
+  **** SW Build 3869133 on Jun 15 2023
+  **** IP Build 3900379 on Sat Jun 17 05:28:05 MDT 2023
+  **** SharedData Build 3899622 on Fri Jun 16 03:34:24 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source /tools/software/xilinx/Vitis_HLS/2023.1/scripts/vitis_hls/hls.tcl -notrace
+[1mSYNTAX [0m
+  [1mvitis_hls[0m <[1mtclscripts[0m> [OPTIONS]
+
+[1mDESCRIPTION[0m
+  Vitis HLS command line
+
+[1mOPTIONS[0m
+  [1mtclscripts[0m : <string> 
+    TCL file
+  [1m-config[0m <string> 
+    Config ini files (may be specified 1+ times), must be used with -run
+  [1m-eval[0m <string> 
+    Run TCL commands
+  [1m-f[0m [=true|[4mfalse[0m]
+    start in shell mode
+  [1m-i[0m [=true|[4mfalse[0m]
+    start in interactive mode
+  [1m-l[0m <string:[4mvitis_hls.log[0m> 
+    log file
+  [1m-n[0m [=true|[4mfalse[0m]
+    do not show splash screen
+  [1m-nolog[0m [=true|[4mfalse[0m]
+    Disable log file creation
+  [1m-nosplash[0m [=true|[4mfalse[0m]
+    do not show splash screen
+  [1m-p[0m <string> 
+    project name
+  [1m-run[0m <csim|csynth|cosim|vivado|tcl>
+    run target
+  [1m-terse[0m [=true|[4mfalse[0m]
+    Filter stdout to only show status INFO and WARNING messages, log file will contain all messages
+  [1m-version[0m [=true|[4mfalse[0m]
+    show product version
+  [1m-work_dir[0m <string> 
+    Output project directory, must be used with -run target
+
+[1mSEE ALSO[0m
+  www.xilinx.com/cgi-bin/docs/rdoc?v=2023.1;t=vitis+doc;d=wic1584802485878.html
+
+INFO: [HLS 200-112] Total CPU user time: 0.71 seconds. Total CPU system time: 0.18 seconds. Total elapsed time: 4.74 seconds; peak allocated memory: 173.637 MB.
+INFO: [Common 17-206] Exiting vitis_hls at Sat Dec 16 23:07:12 2023...

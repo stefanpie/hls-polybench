@@ -1,20 +1,9 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "seidel-2d.h"
 
 
 void kernel_seidel_2d(int tsteps,
 		      int n,
-		      t_ap_fixed A[ 2000 + 0][2000 + 0])
+		      t_ap_fixed A[ 400 + 0][400 + 0])
 {
   int t, i, j;
 

@@ -1,23 +1,10 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
-
-
+#include "gramschmidt.h"
 
 
 void kernel_gramschmidt(int m, int n,
-			t_ap_fixed A[ 1000 + 0][1200 + 0],
-			t_ap_fixed R[ 1200 + 0][1200 + 0],
-			t_ap_fixed Q[ 1000 + 0][1200 + 0])
+			t_ap_fixed A[ 200 + 0][240 + 0],
+			t_ap_fixed R[ 240 + 0][240 + 0],
+			t_ap_fixed Q[ 200 + 0][240 + 0])
 {
   int i, j, k;
 

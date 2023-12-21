@@ -1,8 +1,6 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
+#include "floyd-warshall.h"
 void kernel_floyd_warshall(int n,
-			   int path[ 2800 + 0][2800 + 0])
+			   int path[ 500 + 0][500 + 0])
 {
   int i, j, k;
 

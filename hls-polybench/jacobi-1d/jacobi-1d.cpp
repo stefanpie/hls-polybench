@@ -1,21 +1,10 @@
-#include "ap_fixed.h"
-#include "hls_math.h"
-
-typedef ap_fixed<32,16> t_ap_fixed;
-
-
-
-
-
-
-
-
+#include "jacobi-1d.h"
 
 
 void kernel_jacobi_1d(int tsteps,
 			    int n,
-			    t_ap_fixed A[ 2000 + 0],
-			    t_ap_fixed B[ 2000 + 0])
+			    t_ap_fixed A[ 400 + 0],
+			    t_ap_fixed B[ 400 + 0])
 {
   int t, i;
 
