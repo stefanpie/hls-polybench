@@ -24,9 +24,9 @@ void init_array (int n,
 
   for (i = 0; i < n; i++)
     {
-      x[i] = 0;
-      y[i] = 0;
-      b[i] = (i+1)/fn/((t_ap_fixed)2.0) + 4;
+      x[i] = t_ap_fixed(0.0);
+      y[i] = t_ap_fixed(0.0);
+      b[i] = ( (t_ap_fixed(i+1)) / (fn) ) / (t_ap_fixed(2.0)) + (t_ap_fixed(4.0));
     }
 
   for (i = 0; i < n; i++)
@@ -34,9 +34,9 @@ void init_array (int n,
       for (j = 0; j <= i; j++)
 	A[i][j] = (t_ap_fixed)(-j % n) / n + 1;
       for (j = i+1; j < n; j++) {
-	A[i][j] = 0;
+	A[i][j] = t_ap_fixed(0.0);
       }
-      A[i][i] = 1;
+      A[i][i] = t_ap_fixed(1.0);
     }
 
 
@@ -66,7 +66,7 @@ void print_array(int n,
   fprintf(stderr, "begin dump: %s", "x");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.2lf ", (float)x[i]);
+    fprintf (stderr, "%0.6lf ", (float)x[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "x");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

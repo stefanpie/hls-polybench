@@ -13,7 +13,7 @@ void kernel_atax(int m, int n,
     y[i] = 0;
   for (i = 0; i < m; i++)
     {
-      tmp[i] = (t_ap_fixed)0.0;
+      tmp[i] = (t_ap_fixed(0.0));
       for (j = 0; j < n; j++)
 	tmp[i] = tmp[i] + A[i][j] * x[j];
       for (j = 0; j < n; j++)

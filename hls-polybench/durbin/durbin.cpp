@@ -13,12 +13,12 @@ void kernel_durbin(int n,
  int i,k;
 
  y[0] = -r[0];
- beta = (t_ap_fixed)1.0;
+ beta = (t_ap_fixed(1.0));
  alpha = -r[0];
 
  for (k = 1; k < n; k++) {
    beta = (1-alpha*alpha)*beta;
-   sum = (t_ap_fixed)0.0;
+   sum = (t_ap_fixed(0.0));
    for (i=0; i<k; i++) {
       sum += r[k-i-1]*y[i];
    }

@@ -14,8 +14,8 @@ void kernel_gesummv(int n,
 
   for (i = 0; i < n; i++)
     {
-      tmp[i] = (t_ap_fixed)0.0;
-      y[i] = (t_ap_fixed)0.0;
+      tmp[i] = (t_ap_fixed(0.0));
+      y[i] = (t_ap_fixed(0.0));
       for (j = 0; j < n; j++)
 	{
 	  tmp[i] = A[i][j] * x[j] + tmp[i];

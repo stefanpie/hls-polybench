@@ -32,7 +32,7 @@ void print_array(int n,
   fprintf(stderr, "begin dump: %s", "y");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.2lf ", (float)y[i]);
+    fprintf (stderr, "%0.6lf ", (float)y[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "y");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

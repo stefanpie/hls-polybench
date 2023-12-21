@@ -47,7 +47,7 @@ void print_array(int nx,
   for (i = 0; i < nx; i++)
     for (j = 0; j < ny; j++) {
       if ((i * nx + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.2lf ", ex[i][j]);
+      fprintf(stderr, "%0.6lf ", (float)ex[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "ex");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -56,7 +56,7 @@ void print_array(int nx,
   for (i = 0; i < nx; i++)
     for (j = 0; j < ny; j++) {
       if ((i * nx + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.2lf ", ey[i][j]);
+      fprintf(stderr, "%0.6lf ", (float)ey[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "ey");
 
@@ -64,7 +64,7 @@ void print_array(int nx,
   for (i = 0; i < nx; i++)
     for (j = 0; j < ny; j++) {
       if ((i * nx + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.2lf ", hz[i][j]);
+      fprintf(stderr, "%0.6lf ", (float)hz[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "hz");
 }
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
 		  _fict_);
 
 
-  if (argc > 42 && ! strcmp(argv[0], ""))	print_array(nx, ny, ex,
+  print_array(nx, ny, ex,
 				    ey,
 				    hz);
 

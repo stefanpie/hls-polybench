@@ -32,23 +32,23 @@ void init_array (int n,
 {
   int i, j;
 
-  *alpha = ((t_ap_fixed)1.5);
-  *beta = ((t_ap_fixed)1.2);
+  *alpha = (t_ap_fixed(1.5));
+  *beta = (t_ap_fixed(1.2));
 
   t_ap_fixed fn = (t_ap_fixed)n;
 
   for (i = 0; i < n; i++)
     {
       u1[i] = i;
-      u2[i] = ((i+1)/fn)/((t_ap_fixed)2.0);
-      v1[i] = ((i+1)/fn)/((t_ap_fixed)4.0);
-      v2[i] = ((i+1)/fn)/((t_ap_fixed)6.0);
-      y[i] = ((i+1)/fn)/((t_ap_fixed)8.0);
-      z[i] = ((i+1)/fn)/((t_ap_fixed)9.0);
-      x[i] = ((t_ap_fixed)0.0);
-      w[i] = ((t_ap_fixed)0.0);
+      u2[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(2.0));
+      v1[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(4.0));
+      v2[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(6.0));
+      y[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(8.0));
+      z[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(9.0));
+      x[i] = (t_ap_fixed(0.0));
+      w[i] = (t_ap_fixed(0.0));
       for (j = 0; j < n; j++)
-        A[i][j] = (t_ap_fixed) (i*j % n) / n;
+        A[i][j] = (t_ap_fixed) ((t_ap_fixed(i*j % n)) / (t_ap_fixed(n)));
     }
 }
 
@@ -62,7 +62,7 @@ void print_array(int n,
   fprintf(stderr, "begin dump: %s", "w");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.2lf ", (float)w[i]);
+    fprintf (stderr, "%0.6lf ", (float)w[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "w");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

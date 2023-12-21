@@ -1,0 +1,371 @@
+Polybench HLS Processed Test Report
+----------------------------------
+
+BENCHMARK : 2mm
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "D": {
+        "mae": 0.00012019229797678724,
+        "mse": 1.960358714598556e-08,
+        "rmse": 0.0001400128106495458
+    }
+}
+
+BENCHMARK : 3mm
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "G": {
+        "mae": 2.2439365079367768e-05,
+        "mse": 7.507003703704857e-10,
+        "rmse": 2.739891184646729e-05
+    }
+}
+
+BENCHMARK : adi
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "u": {
+        "mae": 2.8132500000790373e-07,
+        "mse": 2.813250000158074e-13,
+        "rmse": 5.304007918695139e-07
+    }
+}
+
+BENCHMARK : atax
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "y": {
+        "mae": 5.988780488822646e-05,
+        "mse": 4.89975122077905e-09,
+        "rmse": 6.9998222983009e-05
+    }
+}
+
+BENCHMARK : bicg
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "q": {
+        "mae": 1.8853658536816111e-06,
+        "mse": 4.9195121946125585e-12,
+        "rmse": 2.217997338729819e-06
+    },
+    "s": {
+        "mae": 1.8205128208720476e-06,
+        "mse": 4.774358975247308e-12,
+        "rmse": 2.1850306577362495e-06
+    }
+}
+
+BENCHMARK : cholesky
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "A": {
+        "mae": 0.0,
+        "mse": 0.0,
+        "rmse": 0.0
+    }
+}
+
+BENCHMARK : correlation
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "corr": {
+        "mae": 6467.995308441075,
+        "mse": 72009161.15070619,
+        "rmse": 8485.821183050359
+    }
+}
+
+BENCHMARK : covariance
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "cov": {
+        "mae": 1400.8055718605208,
+        "mse": 3514689.495211672,
+        "rmse": 1874.7505154584362
+    }
+}
+
+BENCHMARK : doitgen
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "A": {
+        "mae": 1.745416666429615e-07,
+        "mse": 1.745416666192563e-13,
+        "rmse": 4.177818409400489e-07
+    }
+}
+
+BENCHMARK : durbin
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "y": {
+        "mae": 2.309383415,
+        "mse": 6.593156106137839,
+        "rmse": 2.5677141792142364
+    }
+}
+
+BENCHMARK : fdtd-2d
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "ex": {
+        "mae": 7.715833332376984e-07,
+        "mse": 1.7456666664153805e-12,
+        "rmse": 1.3212367942255395e-06
+    },
+    "ey": {
+        "mae": 7.738125000783721e-07,
+        "mse": 1.4408125002514296e-12,
+        "rmse": 1.2003384940305087e-06
+    },
+    "hz": {
+        "mae": 1.022604166681344e-06,
+        "mse": 2.9815625001627315e-12,
+        "rmse": 1.726720156876247e-06
+    }
+}
+
+BENCHMARK : floyd-warshall
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "path": {
+        "mae": 0.0,
+        "mse": 0.0,
+        "rmse": 0.0
+    }
+}
+
+BENCHMARK : gemm
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "C": {
+        "mae": 1.8682500001631782e-06,
+        "mse": 4.899113637331473e-12,
+        "rmse": 2.213394144144118e-06
+    }
+}
+
+BENCHMARK : gemver
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "w": {
+        "mae": 20581253.176637664,
+        "mse": 561335993700937.6,
+        "rmse": 23692530.335549593
+    }
+}
+
+BENCHMARK : gesummv
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "y": {
+        "mae": 3.611999999861837e-06,
+        "mse": 1.813200000416652e-11,
+        "rmse": 4.258168620917509e-06
+    }
+}
+
+BENCHMARK : gramschmidt
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "Q": {
+        "mae": 8731.71400742225,
+        "mse": 188160107.6476542,
+        "rmse": 13717.146483421915
+    },
+    "R": {
+        "mae": 8071.215854077517,
+        "mse": 176323677.76916078,
+        "rmse": 13278.692622738157
+    }
+}
+
+BENCHMARK : heat-3d
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "A": {
+        "mae": 0.0,
+        "mse": 0.0,
+        "rmse": 0.0
+    }
+}
+
+BENCHMARK : jacobi-1d
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "A": {
+        "mae": 9.749999999988934e-08,
+        "mse": 9.749999999977868e-14,
+        "rmse": 3.122498999195655e-07
+    }
+}
+
+BENCHMARK : jacobi-2d
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "A": {
+        "mae": 2.7584959999692373e-06,
+        "mse": 1.7273055999117287e-11,
+        "rmse": 4.156086620742798e-06
+    }
+}
+
+BENCHMARK : lu
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "A": {
+        "mae": 0.0,
+        "mse": 0.0,
+        "rmse": 0.0
+    }
+}
+
+BENCHMARK : ludcmp
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "x": {
+        "mae": 0.0,
+        "mse": 0.0,
+        "rmse": 0.0
+    }
+}
+
+BENCHMARK : mvt
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "x": {
+        "mae": 1.912718204266639e-06,
+        "mse": 4.825436409560177e-12,
+        "rmse": 2.196687599446079e-06
+    }
+}
+
+BENCHMARK : nussinov
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "table": {
+        "mae": 0.0,
+        "mse": 0.0,
+        "rmse": 0.0
+    }
+}
+
+BENCHMARK : seidel-2d
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "A": {
+        "mae": 2.1506749984492978e-06,
+        "mse": 1.1711224989989724e-11,
+        "rmse": 3.422166709847684e-06
+    }
+}
+
+BENCHMARK : symm
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "C": {
+        "mae": 4.300000000883042e-07,
+        "mse": 4.3000000017660835e-13,
+        "rmse": 6.557438525648626e-07
+    }
+}
+
+BENCHMARK : syr2k
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "C": {
+        "mae": 1.8206770833268444e-06,
+        "mse": 9.149913194366411e-12,
+        "rmse": 3.0248823438881734e-06
+    }
+}
+
+BENCHMARK : syrk
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "C": {
+        "mae": 8.985937500455596e-07,
+        "mse": 2.3150868058171034e-12,
+        "rmse": 1.5215409313643532e-06
+    }
+}
+
+BENCHMARK : trisolv
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "x": {
+        "mae": 5.000000000005e-09,
+        "mse": 5.000000000010001e-15,
+        "rmse": 7.071067811872547e-08
+    }
+}
+
+BENCHMARK : trmm
+COMPILE   : 0
+RUN       : 0
+ERROR     :
+{
+    "B": {
+        "mae": 8.130208332456755e-07,
+        "mse": 1.5152708330847738e-12,
+        "rmse": 1.2309633760127771e-06
+    }
+}
+

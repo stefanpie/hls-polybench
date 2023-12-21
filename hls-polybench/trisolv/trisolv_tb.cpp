@@ -37,7 +37,7 @@ void print_array(int n,
   fprintf(stderr, "==BEGIN DUMP_ARRAYS==\n");
   fprintf(stderr, "begin dump: %s", "x");
   for (i = 0; i < n; i++) {
-    fprintf (stderr, "%0.2lf ", (float)x[i]);
+    fprintf (stderr, "%0.6lf ", (float)x[i]);
     if (i % 20 == 0) fprintf (stderr, "\n");
   }
   fprintf(stderr, "\nend   dump: %s\n", "x");

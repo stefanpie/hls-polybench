@@ -16,7 +16,7 @@ void kernel_2mm(int ni, int nj, int nk, int nl,
   for (i = 0; i < ni; i++)
     for (j = 0; j < nj; j++)
       {
-	tmp[i][j] = (t_ap_fixed)0.0;
+	tmp[i][j] = (t_ap_fixed(0.0));
 	for (k = 0; k < nk; ++k)
 	  tmp[i][j] += alpha * A[i][k] * B[k][j];
       }

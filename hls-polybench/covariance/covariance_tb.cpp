@@ -21,7 +21,7 @@ void init_array (int m, int n,
 
   for (i = 0; i < 260; i++)
     for (j = 0; j < 240; j++)
-      data[i][j] = ((t_ap_fixed) i*j) / 240;
+      data[i][j] = t_ap_fixed(i*j) / t_ap_fixed(240.0);
 }
 
 
@@ -36,7 +36,7 @@ void print_array(int m,
   for (i = 0; i < m; i++)
     for (j = 0; j < m; j++) {
       if ((i * m + j) % 20 == 0) fprintf (stderr, "\n");
-      fprintf (stderr, "%0.2lf ", (float)cov[i][j]);
+      fprintf (stderr, "%0.6lf ", (float)cov[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "cov");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

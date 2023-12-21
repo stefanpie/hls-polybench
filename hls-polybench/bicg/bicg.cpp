@@ -14,7 +14,7 @@ void kernel_bicg(int m, int n,
     s[i] = 0;
   for (i = 0; i < n; i++)
     {
-      q[i] = (t_ap_fixed)0.0;
+      q[i] = (t_ap_fixed(0.0));
       for (j = 0; j < m; j++)
 	{
 	  s[j] = s[j] + r[i] * A[i][j];

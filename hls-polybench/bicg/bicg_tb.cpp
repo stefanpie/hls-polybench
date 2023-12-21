@@ -41,13 +41,13 @@ void print_array(int m, int n,
   fprintf(stderr, "begin dump: %s", "s");
   for (i = 0; i < m; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.2lf ", (float)s[i]);
+    fprintf (stderr, "%0.6lf ", (float)s[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "s");
   fprintf(stderr, "begin dump: %s", "q");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.2lf ", (float)q[i]);
+    fprintf (stderr, "%0.6lf ", (float)q[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "q");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

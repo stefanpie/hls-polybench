@@ -10,12 +10,12 @@ void kernel_correlation(int m, int n,
 {
   int i, j, k;
 
-  t_ap_fixed eps = (t_ap_fixed)0.1;
+  t_ap_fixed eps = (t_ap_fixed(0.1));
 
 
   for (j = 0; j < m; j++)
     {
-      mean[j] = (t_ap_fixed)0.0;
+      mean[j] = (t_ap_fixed(0.0));
       for (i = 0; i < n; i++)
 	mean[j] += data[i][j];
       mean[j] /= float_n;
@@ -24,14 +24,14 @@ void kernel_correlation(int m, int n,
 
    for (j = 0; j < m; j++)
     {
-      stddev[j] = (t_ap_fixed)0.0;
+      stddev[j] = (t_ap_fixed(0.0));
       for (i = 0; i < n; i++)
         stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
       stddev[j] /= float_n;
       stddev[j] = hls::sqrt(stddev[j]);
 
 
-      stddev[j] = stddev[j] <= eps ? (t_ap_fixed)1.0 : stddev[j];
+      stddev[j] = stddev[j] <= eps ? (t_ap_fixed(1.0)) : stddev[j];
     }
 
 
@@ -45,15 +45,15 @@ void kernel_correlation(int m, int n,
 
   for (i = 0; i < m-1; i++)
     {
-      corr[i][i] = (t_ap_fixed)1.0;
+      corr[i][i] = (t_ap_fixed(1.0));
       for (j = i+1; j < m; j++)
         {
-          corr[i][j] = (t_ap_fixed)0.0;
+          corr[i][j] = (t_ap_fixed(0.0));
           for (k = 0; k < n; k++)
             corr[i][j] += (data[k][i] * data[k][j]);
           corr[j][i] = corr[i][j];
         }
     }
-  corr[m-1][m-1] = (t_ap_fixed)1.0;
+  corr[m-1][m-1] = (t_ap_fixed(1.0));
 
 }

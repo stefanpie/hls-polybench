@@ -12,6 +12,6 @@ void kernel_seidel_2d(int tsteps,
       for (j = 1; j <= n - 2; j++)
 	A[i][j] = (A[i-1][j-1] + A[i-1][j] + A[i-1][j+1]
 		   + A[i][j-1] + A[i][j] + A[i][j+1]
-		   + A[i+1][j-1] + A[i+1][j] + A[i+1][j+1])/(t_ap_fixed)9.0;
+		   + A[i+1][j-1] + A[i+1][j] + A[i+1][j+1])/(t_ap_fixed(9.0));
 
 }

@@ -18,12 +18,12 @@ void init_array (int w, int h, t_ap_fixed* alpha,
 {
   int i, j;
 
-  *alpha=((t_ap_fixed)0.25);
+  *alpha=(t_ap_fixed(0.25));
 
 
   for (i = 0; i < w; i++)
      for (j = 0; j < h; j++)
-	imgIn[i][j] = (t_ap_fixed) ((313*i+991*j)%65536) / ((t_ap_fixed)65535.0f);
+	imgIn[i][j] = (t_ap_fixed) ((313*i+991*j)%65536) / (t_ap_fixed(65535.0f));
 }
 
 
@@ -38,7 +38,7 @@ void print_array(int w, int h,
   for (i = 0; i < w; i++)
     for (j = 0; j < h; j++) {
       if ((i * h + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.2f ", (float)imgOut[i][j]);
+      fprintf(stderr, "%0.6f ", (float)imgOut[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "imgOut");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

@@ -17,12 +17,12 @@ void init_array(int m, int n,
 {
   int i, j;
 
-  *alpha = ((t_ap_fixed)1.5);
+  *alpha = (t_ap_fixed(1.5));
   for (i = 0; i < m; i++) {
     for (j = 0; j < i; j++) {
       A[i][j] = (t_ap_fixed)((i+j) % m)/m;
     }
-    A[i][i] = ((t_ap_fixed)1.0);
+    A[i][i] = (t_ap_fixed(1.0));
     for (j = 0; j < n; j++) {
       B[i][j] = (t_ap_fixed)((n+(i-j)) % n)/n;
     }
@@ -41,7 +41,7 @@ void print_array(int m, int n,
   for (i = 0; i < m; i++)
     for (j = 0; j < n; j++) {
 	if ((i * m + j) % 20 == 0) fprintf (stderr, "\n");
-	fprintf (stderr, "%0.2lf ", (float)B[i][j]);
+	fprintf (stderr, "%0.6lf ", (float)B[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "B");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

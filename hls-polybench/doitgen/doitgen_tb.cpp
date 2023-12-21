@@ -38,7 +38,7 @@ void print_array(int nr, int nq, int np,
     for (j = 0; j < nq; j++)
       for (k = 0; k < np; k++) {
 	if ((i*nq*np+j*np+k) % 20 == 0) fprintf (stderr, "\n");
-	fprintf (stderr, "%0.2lf ", (float)A[i][j][k]);
+	fprintf (stderr, "%0.6lf ", (float)A[i][j][k]);
       }
   fprintf(stderr, "\nend   dump: %s\n", "A");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

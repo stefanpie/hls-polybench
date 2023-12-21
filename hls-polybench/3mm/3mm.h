@@ -2,7 +2,7 @@
 #include "ap_fixed.h"
 #include "hls_math.h"
 
-typedef ap_fixed<32,20> t_ap_fixed;
+typedef ap_fixed<48,16> t_ap_fixed;
 
 extern "C" {
 void kernel_3mm(int ni, int nj, int nk, int nl, int nm,

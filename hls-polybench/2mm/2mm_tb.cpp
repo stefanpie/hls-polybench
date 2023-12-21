@@ -23,8 +23,8 @@ void init_array(int ni, int nj, int nk, int nl,
 {
   int i, j;
 
-  *alpha = ((t_ap_fixed)1.5);
-  *beta = ((t_ap_fixed)1.2);
+  *alpha = (t_ap_fixed(1.5));
+  *beta = (t_ap_fixed(1.2));
   for (i = 0; i < ni; i++)
     for (j = 0; j < nk; j++)
       A[i][j] = (t_ap_fixed) ((i*j+1) % ni) / ni;
@@ -50,7 +50,7 @@ void print_array(int ni, int nl,
   for (i = 0; i < ni; i++)
     for (j = 0; j < nl; j++) {
 	if ((i * ni + j) % 20 == 0) fprintf (stderr, "\n");
-	fprintf (stderr, "%0.2lf ", (float)D[i][j]);
+	fprintf (stderr, "%0.6lf ", (float)D[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "D");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");

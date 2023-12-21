@@ -136,7 +136,8 @@ def cast_decimal_to_ap_fixed(c_fp: Path):
         start, end = match.span()
         start += offset
         end += offset
-        new_text = "(t_ap_fixed)" + c_text[start:end]
+        # new_text = "(t_ap_fixed)" + c_text[start:end]
+        new_text = "(" + "t_ap_fixed" + "(" + c_text[start:end] + ")" + ")"
         c_text = c_text[:start] + new_text + c_text[end:]
         offset += len(new_text) - (end - start)
     c_fp.write_text(c_text)
@@ -154,7 +155,8 @@ def cast_decimal_to_ap_fixed_not_in_quotes(c_fp: Path):
         start, end = match.span()
         start += offset
         end += offset
-        new_text = "(" + "(t_ap_fixed)" + c_text[start:end] + ")"
+        # new_text = "(" + "(t_ap_fixed)" + c_text[start:end] + ")"
+        new_text = "(" + "t_ap_fixed" + "(" + c_text[start:end] + ")" + ")"
         c_text = c_text[:start] + new_text + c_text[end:]
         offset += len(new_text) - (end - start)
     c_fp.write_text(c_text)
@@ -199,11 +201,17 @@ def process_benchmark_header(h_fp: Path):
                 new_lines.append(new_line)
                 continue
         elif "DATA_TYPE float" in line:
-            new_lines.append("typedef ap_fixed<32,20> t_ap_fixed;")
+            new_lines.append("typedef ap_fixed<48,16> t_ap_fixed;")
             new_lines.append(line.replace("float", "t_ap_fixed"))
+            # dummy replace, keep as float
+            # new_lines.append("typedef float t_ap_fixed;")
+            # new_lines.append(line.replace("float", "t_ap_fixed"))
         elif "DATA_TYPE double" in line:
-            new_lines.append("typedef ap_fixed<32,20> t_ap_fixed;")
+            new_lines.append("typedef ap_fixed<48,16> t_ap_fixed;")
             new_lines.append(line.replace("double", "t_ap_fixed"))
+            # dummy replace, keep as double
+            # new_lines.append("typedef double t_ap_fixed;")
+            # new_lines.append(line.replace("double", "t_ap_fixed"))
         else:
             new_lines.append(line)
 
@@ -253,22 +261,13 @@ def replace_array_declarations(c_fp: Path):
     c_fp.write_text(c_text)
 
 
-RE_DCE_CALL = re.compile(r"polybench_prevent_dce\((.*?)\);")
+RE_DCE_CALL = re.compile(r"polybench_prevent_dce\(((?:.|\s)*?)\);")
 
 
 def remove_dce_call(c_fp: Path):
     c_fp = Path(c_fp)
     c_text = c_fp.read_text()
-    lines = c_text.splitlines()
-    new_lines = []
-    for line in lines:
-        match = RE_DCE_CALL.search(line)
-        if match:
-            new_line = line.replace(match.group(0), match.group(1)) + ";"
-            new_lines.append(new_line)
-        else:
-            new_lines.append(line)
-    c_text = "\n".join(new_lines)
+    c_text = RE_DCE_CALL.sub(r"\1;", c_text)
     c_fp.write_text(c_text)
 
 
@@ -359,6 +358,28 @@ def add_new_lines_after_last_include(c_fp: Path, lines_to_add: list[str]):
     c_fp.write_text(c_text)
 
 
+def add_new_lines_after_matching_line(
+    c_fp: Path, match_str: str, lines_to_add: list[str]
+):
+    c_text = c_fp.read_text()
+    lines = c_text.splitlines()
+    match_line_number = None
+    for i, line in enumerate(lines):
+        if match_str in line:
+            match_line_number = i
+    if match_line_number is None:
+        raise ValueError("Could not find match")
+
+    new_lines = []
+    for i, line in enumerate(lines):
+        new_lines.append(line)
+        if i == match_line_number:
+            new_lines += "\n"
+            new_lines += lines_to_add
+    c_text = "\n".join(new_lines)
+    c_fp.write_text(c_text)
+
+
 def remove_pointers_and_refs_from_c_function_call(
     c_fp: Path, function_call_str: str, top_function: str
 ):
@@ -408,15 +429,10 @@ def cast_printf_ap_fixed_to_float(c_fp: Path):
     lines = c_text.splitlines()
     new_lines = []
     for line in lines:
-        if 'fprintf (stderr, "%0.2lf "' in line:
-            new_line = line.replace(
-                'fprintf (stderr, "%0.2lf ", ', 'fprintf (stderr, "%0.2lf ", (float)'
-            )
-            new_lines.append(new_line)
-        elif 'fprintf(stderr, "%0.2f "' in line:
-            new_line = line.replace(
-                'fprintf(stderr, "%0.2f ", ', 'fprintf(stderr, "%0.2f ", (float)'
-            )
+        match = re.search(r"fprintf\s*\(\s*stderr\s*,\s*\"%0\.[0-9]+l?f\s*\", ?", line)
+        if match:
+            start, end = match.span()
+            new_line = line[:start] + match.group(0) + "(float)" + line[end:]
             new_lines.append(new_line)
         else:
             new_lines.append(line)
@@ -518,13 +534,15 @@ def main(args):
     main_config_make_text = main_config_make_text.replace(
         "-DPOLYBENCH_USE_C99_PROTO", ""
     )
-    # find line that starts with CFLAGS and append -DMINI_DATASET to end of it
-    for line in main_config_make_text.splitlines():
-        if line.startswith("CFLAGS"):
-            main_config_make_text = line + f" -D{polybench_dataset_size}_DATASET"
-            break
-    else:
-        raise ValueError("Could not find CFLAGS line")
+
+    if polybench_dataset_size != "DEFAULT":
+        for line in main_config_make_text.splitlines():
+            if line.startswith("CFLAGS"):
+                main_config_make_text = line + f" -D{polybench_dataset_size}_DATASET"
+                break
+        else:
+            raise ValueError("Could not find CFLAGS line")
+
     main_config_make_fp.write_text(main_config_make_text)
 
     makefiles_fps = list(tmp_dir.rglob("Makefile"))
@@ -533,9 +551,9 @@ def main(args):
         design_dir = makefile_fp.parent
         design_name = design_dir.name
 
-        # h_fp = design_dir / f"{design_name}.h"
-        # print(h_fp)
-        # add_more_decimals_to_printf(h_fp, 4)
+        h_fp = design_dir / f"{design_name}.h"
+        print(h_fp)
+        add_more_decimals_to_printf(h_fp, 6)
 
         print(f"Compiling {design_dir} : {design_name}")
         p = subprocess.run(
@@ -620,11 +638,13 @@ def main(args):
             str(output_c_file),
             "-I",
             str(new_benchmark_dir),
-            str(input_c_file),
-            "-D",
-            # "MINI_DATASET",
-            f"{polybench_dataset_size}_DATASET",
         ]
+        if polybench_dataset_size != "DEFAULT":
+            fake_argv += ["-D", f"{polybench_dataset_size}_DATASET"]
+
+        # str(input_c_file)
+        fake_argv += [str(input_c_file)]
+
         with SuppressOutput():
             CmdPreprocessor(fake_argv)
 
@@ -651,11 +671,14 @@ def main(args):
             str(output_tb_file),
             "-I",
             str(new_benchmark_dir),
-            str(input_tb_file),
-            "-D",
-            # "MINI_DATASET",
-            f"{polybench_dataset_size}_DATASET",
         ]
+        if polybench_dataset_size != "DEFAULT":
+            fake_argv += ["-D", f"{polybench_dataset_size}_DATASET"]
+
+        fake_argv += [
+            str(input_tb_file),
+        ]
+
         with SuppressOutput():
             CmdPreprocessor(fake_argv)
 
@@ -792,6 +815,139 @@ def main(args):
                 new_benchmark_dir / (benchmark_name + "_tb.cpp"), "(*B)", "B"
             )
 
+        if benchmark_name == "gramschmidt":
+            # special case to add support for eps in gramschmidt calculation
+            # due to sqrt and fixed point quantizing to 0 sometimes
+            kernel_fp = new_benchmark_dir / (benchmark_name + ".cpp")
+
+            add_new_lines_after_matching_line(
+                kernel_fp,
+                "t_ap_fixed nrm;",
+                [
+                    "  const t_ap_fixed eps = hls::nextafter(t_ap_fixed(0.0), t_ap_fixed(1.0));"
+                ],
+            )
+            replace_text_exact(
+                new_benchmark_dir / (benchmark_name + ".cpp"),
+                "R[k][k] = hls::sqrt(nrm);",
+                "R[k][k] = hls::sqrt(nrm);\n      if (R[k][k] == t_ap_fixed(0.0)) R[k][k] += eps;",
+            )
+
+            # TODO: fix other issues with large fixed point percision rnage and norm sum overflows
+
+        if benchmark_name == "atax":
+            # special case in atax to fix weird casting rules between int and ap_fixed based on int loop index variables
+            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+            replace_text_exact(
+                tb_fp,
+                "x[i] = 1 + (i / fn);",
+                "x[i] = (t_ap_fixed(1.0)) + ( (t_ap_fixed(i)) / fn );",
+            )
+            replace_text_exact(
+                tb_fp,
+                "((i+j) % n) / (5*m)",
+                "(t_ap_fixed(((i+j) % n))) / (t_ap_fixed(5.0)*t_ap_fixed(m))",
+            )
+
+        if benchmark_name == "gemver":
+            # special case in gemver to fix weird casting rules between int and ap_fixed based on int loop index variables
+            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+            replace_text_exact(
+                tb_fp,
+                "((i+1)/fn)",
+                "(t_ap_fixed(i+1)) / (fn)",
+            )
+            replace_text_exact(
+                tb_fp,
+                "(i*j % n) / n",
+                "((t_ap_fixed(i*j % n)) / (t_ap_fixed(n)))",
+            )
+
+        if benchmark_name == "gramschmidt":
+            # special case in gramschmidt to fix weird casting rules between int and ap_fixed based on int loop index variables
+            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+            # (((t_ap_fixed) ((i*j) % m) / m )*100) + 10
+            replace_text_exact(
+                tb_fp,
+                "(((t_ap_fixed) ((i*j) % m) / m )*100) + 10",
+                "(( (t_ap_fixed(i*j % m)) / (t_ap_fixed(m)) ) * (t_ap_fixed(100.0)) ) + (t_ap_fixed(10.0))",
+            )
+
+        if benchmark_name == "ludcmp":
+            # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
+            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+            replace_text_exact(
+                tb_fp,
+                "x[i] = 0;",
+                "x[i] = t_ap_fixed(0.0);",
+            )
+            replace_text_exact(
+                tb_fp,
+                "y[i] = 0;",
+                "y[i] = t_ap_fixed(0.0);",
+            )
+            # b[i] = (i+1)/fn/(t_ap_fixed(2.0)) + 4;
+            replace_text_exact(
+                tb_fp,
+                "b[i] = (i+1)/fn/(t_ap_fixed(2.0)) + 4;",
+                "b[i] = ( (t_ap_fixed(i+1)) / (fn) ) / (t_ap_fixed(2.0)) + (t_ap_fixed(4.0));",
+            )
+            # A[i][j] = 0;
+            replace_text_exact(
+                tb_fp,
+                "A[i][j] = 0;",
+                "A[i][j] = t_ap_fixed(0.0);",
+            )
+            # A[i][i] = 1;
+            replace_text_exact(
+                tb_fp,
+                "A[i][i] = 1;",
+                "A[i][i] = t_ap_fixed(1.0);",
+            )
+
+        if benchmark_name == "correlation":
+            # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
+            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+
+            RE_FLOAT_N = re.compile("\*float_n = \(t_ap_fixed\)(\d+);")
+            match = RE_FLOAT_N.search(tb_fp.read_text())
+            if match:
+                float_n = match.group(1)
+                replace_text_exact(
+                    tb_fp,
+                    f"*float_n = (t_ap_fixed){float_n};",
+                    f"*float_n = t_ap_fixed({float_n}.0);",
+                )
+
+            RE_LINE_TO_CHANGE = re.compile("\(t_ap_fixed\)\(i\*j\)/(\d+) \+ i;")
+            match = RE_LINE_TO_CHANGE.search(tb_fp.read_text())
+            if match:
+                n = match.group(1)
+                replace_text_exact(
+                    tb_fp,
+                    f"(t_ap_fixed)(i*j)/{n} + i;",
+                    f"(t_ap_fixed)(t_ap_fixed(i*j)/t_ap_fixed({n}.0)) + t_ap_fixed(i);",
+                )
+
+        if benchmark_name == "covariance":
+            # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
+
+            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+
+            # data[i][j] = ((t_ap_fixed) i*j) / 80;
+            RE_LINE_TO_CHANGE = re.compile(
+                "data\[i\]\[j\] = \(\(t_ap_fixed\) i\*j\) / (\d+);"
+            )
+
+            match = RE_LINE_TO_CHANGE.search(tb_fp.read_text())
+            if match:
+                n = match.group(1)
+                replace_text_exact(
+                    tb_fp,
+                    f"data[i][j] = ((t_ap_fixed) i*j) / {n};",
+                    f"data[i][j] = t_ap_fixed(i*j) / t_ap_fixed({n}.0);",
+                )
+
         fix_spacing(new_benchmark_dir / (benchmark_name + ".cpp"))
         fix_spacing(new_benchmark_dir / (benchmark_name + "_tb.cpp"))
         fix_spacing(new_benchmark_dir / (benchmark_name + ".h"))
@@ -832,25 +988,22 @@ if __name__ == "__main__":
         help="Number of jobs to run in parallel",
     )
 
-    # parser.add_argument(
-    #     "--dataset-size",
-    #     type=str,
-    #     nargs="?",
-    #     default="mini",
-    #     # MINI	SMALL	MEDIUM	LARGE	EXTRALARGE
-    #     help="Dataset size to use based on the sizes defined by polybench: MINI, SMALL, MEDIUM, LARGE, EXTRALARGE",
-    # )
-
-    # make argument where value has to be one of the following
-    # MINI	SMALL	MEDIUM	LARGE	EXTRALARGE
-    POLYBENCH_DATASET_SIZES = ["MINI", "SMALL", "MEDIUM", "LARGE", "EXTRALARGE"]
+    POLYBENCH_DATASET_SIZES = [
+        "MINI",
+        "SMALL",
+        "MEDIUM",
+        "LARGE",
+        "EXTRALARGE",
+        "DEFAULT",
+    ]
     parser.add_argument(
+        "-s",
         "--dataset-size",
         type=str,
         nargs="?",
         default="MEDIUM",
         choices=POLYBENCH_DATASET_SIZES,
-        help=f"Dataset size to use based on the sizes defined by polybench: {POLYBENCH_DATASET_SIZES}",
+        help=f"Dataset size to use based on the sizes defined by polybench, {POLYBENCH_DATASET_SIZES}, or the DEFAULT size for each individual benchmark",
     )
 
     args = parser.parse_args()
