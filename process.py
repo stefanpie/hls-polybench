@@ -972,12 +972,21 @@ if __name__ == "__main__":
         type=Path,
         nargs="?",
         default=Path("polybench-c-4.2.1-beta.tar.gz"),
+        help="Path to the input polybench distribution tar.gz file",
     )
     parser.add_argument(
-        "output_directory", type=Path, nargs="?", default=Path("./hls-polybench/")
+        "output_directory",
+        type=Path,
+        nargs="?",
+        default=Path("./hls-polybench/"),
+        help="Generated output directory with processed benchmarks",
     )
     parser.add_argument(
-        "output_file", type=Path, nargs="?", default=Path("./hls-polybench.tar.gz")
+        "output_file",
+        type=Path,
+        nargs="?",
+        default=Path("./hls-polybench.tar.gz"),
+        help="Generated output tar.gz file with processed benchmarks",
     )
     parser.add_argument(
         "-j",
