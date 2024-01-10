@@ -2,9 +2,9 @@
 
 
 void kernel_gramschmidt(int m, int n,
-			t_ap_fixed A[ 200 + 0][240 + 0],
-			t_ap_fixed R[ 240 + 0][240 + 0],
-			t_ap_fixed Q[ 200 + 0][240 + 0])
+			t_ap_fixed A[ 60 + 0][80 + 0],
+			t_ap_fixed R[ 80 + 0][80 + 0],
+			t_ap_fixed Q[ 60 + 0][80 + 0])
 {
   int i, j, k;
 

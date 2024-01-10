@@ -2,9 +2,9 @@
 
 
 void kernel_doitgen(int nr, int nq, int np,
-		    t_ap_fixed A[ 50 + 0][40 + 0][60 + 0],
-		    t_ap_fixed C4[ 60 + 0][60 + 0],
-		    t_ap_fixed sum[ 60 + 0])
+		    t_ap_fixed A[ 25 + 0][20 + 0][30 + 0],
+		    t_ap_fixed C4[ 30 + 0][30 + 0],
+		    t_ap_fixed sum[ 30 + 0])
 {
   int r, q, p, s;
 

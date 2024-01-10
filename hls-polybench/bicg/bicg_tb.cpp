@@ -6,17 +6,17 @@
 #include "bicg.h"
 
 
-t_ap_fixed A[ 410 + 0][390 + 0];
-t_ap_fixed s[ 390 + 0];
-t_ap_fixed q[ 410 + 0];
-t_ap_fixed p[ 390 + 0];
-t_ap_fixed r[ 410 + 0];
+t_ap_fixed A[ 124 + 0][116 + 0];
+t_ap_fixed s[ 116 + 0];
+t_ap_fixed q[ 124 + 0];
+t_ap_fixed p[ 116 + 0];
+t_ap_fixed r[ 124 + 0];
 
 
 void init_array (int m, int n,
-		 t_ap_fixed A[ 410 + 0][390 + 0],
-		 t_ap_fixed r[ 410 + 0],
-		 t_ap_fixed p[ 390 + 0])
+		 t_ap_fixed A[ 124 + 0][116 + 0],
+		 t_ap_fixed r[ 124 + 0],
+		 t_ap_fixed p[ 116 + 0])
 {
   int i, j;
 
@@ -31,8 +31,8 @@ void init_array (int m, int n,
 
 
 void print_array(int m, int n,
-		 t_ap_fixed s[ 390 + 0],
-		 t_ap_fixed q[ 410 + 0])
+		 t_ap_fixed s[ 116 + 0],
+		 t_ap_fixed q[ 124 + 0])
 
 {
   int i;
@@ -57,8 +57,8 @@ void print_array(int m, int n,
 int main(int argc, char** argv)
 {
 
-  int n = 410;
-  int m = 390;
+  int n = 124;
+  int m = 116;
 
 
   init_array (m, n,

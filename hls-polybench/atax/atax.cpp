@@ -2,10 +2,10 @@
 
 
 void kernel_atax(int m, int n,
-		 t_ap_fixed A[ 390 + 0][410 + 0],
-		 t_ap_fixed x[ 410 + 0],
-		 t_ap_fixed y[ 410 + 0],
-		 t_ap_fixed tmp[ 390 + 0])
+		 t_ap_fixed A[ 116 + 0][124 + 0],
+		 t_ap_fixed x[ 124 + 0],
+		 t_ap_fixed y[ 124 + 0],
+		 t_ap_fixed tmp[ 116 + 0])
 {
   int i, j;
 

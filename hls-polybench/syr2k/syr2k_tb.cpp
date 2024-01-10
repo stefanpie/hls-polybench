@@ -6,17 +6,17 @@
 #include "syr2k.h"
 
 
-t_ap_fixed C[ 240 + 0][240 + 0];
-t_ap_fixed A[ 240 + 0][200 + 0];
-t_ap_fixed B[ 240 + 0][200 + 0];
+t_ap_fixed C[ 80 + 0][80 + 0];
+t_ap_fixed A[ 80 + 0][60 + 0];
+t_ap_fixed B[ 80 + 0][60 + 0];
 
 
 void init_array(int n, int m,
 		t_ap_fixed *alpha,
 		t_ap_fixed *beta,
-		t_ap_fixed C[ 240 + 0][240 + 0],
-		t_ap_fixed A[ 240 + 0][200 + 0],
-		t_ap_fixed B[ 240 + 0][200 + 0])
+		t_ap_fixed C[ 80 + 0][80 + 0],
+		t_ap_fixed A[ 80 + 0][60 + 0],
+		t_ap_fixed B[ 80 + 0][60 + 0])
 {
   int i, j;
 
@@ -35,7 +35,7 @@ void init_array(int n, int m,
 
 
 void print_array(int n,
-		 t_ap_fixed C[ 240 + 0][240 + 0])
+		 t_ap_fixed C[ 80 + 0][80 + 0])
 {
   int i, j;
 
@@ -54,8 +54,8 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 240;
-  int m = 200;
+  int n = 80;
+  int m = 60;
 
 
   t_ap_fixed alpha;

@@ -2,10 +2,9 @@
 
 This project aims to provide automation tools to have a reproducible way to generate "High-Level Synthesis (HLS) compatible" versions of all the polybench kernels with their respective testbenches from the original official polybench distribution. Simply provide the main Python script with the path to the latest `polybench.tar.gz` source release (along with some options) and it will generate a `hls-polybench.tar.gz` archive with the HLS-compatible kernels and testbenches each in their own directory.
 
-The generated kernels should be compatible with the Xilinx Vitis HLS tool. All `float` and `double` types are converted to fixed-point types using `ap_fixed` type from the Vitis HLS. All `int` or `uint`.
+The generated kernels should be compatible with the Xilinx Vitis HLS tool. All `float` and `double` types are converted to fixed-point types using `ap_fixed` type from the Vitis HLS. All `int` or `uint` types are left unchanged since they are "natively" supported by the Vitis HLS tool.
 
 The automation is done using source code text processing and manipulation using custom Python functions and a Python-based C preprocessor.
-
 
 ## Usage
 

@@ -11,6 +11,35 @@ from joblib import Parallel, delayed
 from pcpp.pcmd import CmdPreprocessor
 
 
+def get_vitis_hls_clang_pp_path() -> Path:
+    vitis_hls_bin_path_str = shutil.which("vitis_hls")
+    if vitis_hls_bin_path_str is None:
+        raise RuntimeError("vitis_hls not found in PATH")
+    vitis_hls_bin_path = Path(vitis_hls_bin_path_str)
+    vitis_hls_clang_pp_path = (
+        vitis_hls_bin_path.parent.parent
+        / "lnx64"
+        / "tools"
+        / "clang-3.9"
+        / "bin"
+        / "clang++"
+    )
+    if not vitis_hls_clang_pp_path.exists():
+        raise RuntimeError(
+            f"Could not find vitis_hls clang++ bin at {vitis_hls_clang_pp_path}"
+        )
+    return vitis_hls_clang_pp_path
+
+
+def get_vitis_hls_include_dir() -> Path:
+    vitis_hls_bin_path_str = shutil.which("vitis_hls")
+    if vitis_hls_bin_path_str is None:
+        raise RuntimeError("vitis_hls not found in PATH")
+    vitis_hls_bin_path = Path(vitis_hls_bin_path_str)
+    vitis_hls_include_dir = vitis_hls_bin_path.parent.parent / "include"
+    return vitis_hls_include_dir
+
+
 class SuppressOutput:
     def __enter__(self):
         # Save the current stdout and stderr
@@ -201,13 +230,13 @@ def process_benchmark_header(h_fp: Path):
                 new_lines.append(new_line)
                 continue
         elif "DATA_TYPE float" in line:
-            new_lines.append("typedef ap_fixed<48,16> t_ap_fixed;")
+            new_lines.append("typedef ap_fixed<32,16> t_ap_fixed;")
             new_lines.append(line.replace("float", "t_ap_fixed"))
             # dummy replace, keep as float
             # new_lines.append("typedef float t_ap_fixed;")
             # new_lines.append(line.replace("float", "t_ap_fixed"))
         elif "DATA_TYPE double" in line:
-            new_lines.append("typedef ap_fixed<48,16> t_ap_fixed;")
+            new_lines.append("typedef ap_fixed<32,16> t_ap_fixed;")
             new_lines.append(line.replace("double", "t_ap_fixed"))
             # dummy replace, keep as double
             # new_lines.append("typedef double t_ap_fixed;")
@@ -485,6 +514,9 @@ def main(args):
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     output_file = args.output_file
+
+    vitis_hls_include_dir = get_vitis_hls_include_dir()
+    vitis_clang_pp_bin_path = get_vitis_hls_clang_pp_path()
 
     if not polybench_distribution_fp.exists():
         raise FileNotFoundError(
@@ -951,6 +983,22 @@ def main(args):
         fix_spacing(new_benchmark_dir / (benchmark_name + ".cpp"))
         fix_spacing(new_benchmark_dir / (benchmark_name + "_tb.cpp"))
         fix_spacing(new_benchmark_dir / (benchmark_name + ".h"))
+
+        makefile_text = ""
+        makefile_text += f"CC={vitis_clang_pp_bin_path}\n"
+        makefile_text += f"CFLAGS=-std=c++14 -O3 -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'}\n"
+        makefile_text += f"all: {benchmark_name}\n"
+        makefile_text += (
+            f"{benchmark_name}: {benchmark_name}_tb.cpp {benchmark_name}.cpp\n"
+        )
+        makefile_text += "\t$(CC) $^ -o $@ $(CFLAGS)\n"
+        makefile_text += f"run: {benchmark_name}\n"
+        makefile_text += f"\t./{benchmark_name}\n"
+
+        makefile_fp = new_benchmark_dir / "Makefile"
+        makefile_fp.write_text(makefile_text)
+
+        benchmark_size = 
 
     Parallel(n_jobs=n_jobs)(
         delayed(process_benchmark)(benchmark) for benchmark in benchmark_list

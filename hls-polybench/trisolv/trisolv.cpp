@@ -2,9 +2,9 @@
 
 
 void kernel_trisolv(int n,
-		    t_ap_fixed L[ 400 + 0][400 + 0],
-		    t_ap_fixed x[ 400 + 0],
-		    t_ap_fixed b[ 400 + 0])
+		    t_ap_fixed L[ 120 + 0][120 + 0],
+		    t_ap_fixed x[ 120 + 0],
+		    t_ap_fixed b[ 120 + 0])
 {
   int i, j;
 

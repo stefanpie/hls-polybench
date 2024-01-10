@@ -4,9 +4,9 @@
 void kernel_gemm(int ni, int nj, int nk,
 		 t_ap_fixed alpha,
 		 t_ap_fixed beta,
-		 t_ap_fixed C[ 200 + 0][220 + 0],
-		 t_ap_fixed A[ 200 + 0][240 + 0],
-		 t_ap_fixed B[ 240 + 0][220 + 0])
+		 t_ap_fixed C[ 60 + 0][70 + 0],
+		 t_ap_fixed A[ 60 + 0][80 + 0],
+		 t_ap_fixed B[ 80 + 0][70 + 0])
 {
   int i, j, k;
   for (i = 0; i < ni; i++) {

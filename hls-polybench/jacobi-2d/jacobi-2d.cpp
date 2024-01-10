@@ -3,8 +3,8 @@
 
 void kernel_jacobi_2d(int tsteps,
 			    int n,
-			    t_ap_fixed A[ 250 + 0][250 + 0],
-			    t_ap_fixed B[ 250 + 0][250 + 0])
+			    t_ap_fixed A[ 90 + 0][90 + 0],
+			    t_ap_fixed B[ 90 + 0][90 + 0])
 {
   int t, i, j;
 

@@ -6,15 +6,15 @@
 #include "deriche.h"
 
 
-t_ap_fixed imgIn[ 720 + 0][480 + 0];
-t_ap_fixed imgOut[ 720 + 0][480 + 0];
-t_ap_fixed y1[ 720 + 0][480 + 0];
-t_ap_fixed y2[ 720 + 0][480 + 0];
+t_ap_fixed imgIn[ 192 + 0][128 + 0];
+t_ap_fixed imgOut[ 192 + 0][128 + 0];
+t_ap_fixed y1[ 192 + 0][128 + 0];
+t_ap_fixed y2[ 192 + 0][128 + 0];
 
 
 void init_array (int w, int h, t_ap_fixed* alpha,
-		 t_ap_fixed imgIn[ 720 + 0][480 + 0],
-		 t_ap_fixed imgOut[ 720 + 0][480 + 0])
+		 t_ap_fixed imgIn[ 192 + 0][128 + 0],
+		 t_ap_fixed imgOut[ 192 + 0][128 + 0])
 {
   int i, j;
 
@@ -28,7 +28,7 @@ void init_array (int w, int h, t_ap_fixed* alpha,
 
 
 void print_array(int w, int h,
-		 t_ap_fixed imgOut[ 720 + 0][480 + 0])
+		 t_ap_fixed imgOut[ 192 + 0][128 + 0])
 
 {
   int i, j;
@@ -48,8 +48,8 @@ void print_array(int w, int h,
 int main(int argc, char** argv)
 {
 
-  int w = 720;
-  int h = 480;
+  int w = 192;
+  int h = 128;
 
 
   t_ap_fixed alpha;

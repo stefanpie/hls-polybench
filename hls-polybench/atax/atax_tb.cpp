@@ -6,15 +6,15 @@
 #include "atax.h"
 
 
-t_ap_fixed A[ 390 + 0][410 + 0];
-t_ap_fixed x[ 410 + 0];
-t_ap_fixed y[ 410 + 0];
-t_ap_fixed tmp[ 390 + 0];
+t_ap_fixed A[ 116 + 0][124 + 0];
+t_ap_fixed x[ 124 + 0];
+t_ap_fixed y[ 124 + 0];
+t_ap_fixed tmp[ 116 + 0];
 
 
 void init_array (int m, int n,
-		 t_ap_fixed A[ 390 + 0][410 + 0],
-		 t_ap_fixed x[ 410 + 0])
+		 t_ap_fixed A[ 116 + 0][124 + 0],
+		 t_ap_fixed x[ 124 + 0])
 {
   int i, j;
   t_ap_fixed fn;
@@ -29,7 +29,7 @@ void init_array (int m, int n,
 
 
 void print_array(int n,
-		 t_ap_fixed y[ 410 + 0])
+		 t_ap_fixed y[ 124 + 0])
 
 {
   int i;
@@ -48,8 +48,8 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int m = 390;
-  int n = 410;
+  int m = 116;
+  int n = 124;
 
 
   init_array (m, n, A, x);

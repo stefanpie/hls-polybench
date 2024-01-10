@@ -2,10 +2,10 @@
 
 
 void kernel_ludcmp(int n,
-		   t_ap_fixed A[ 400 + 0][400 + 0],
-		   t_ap_fixed b[ 400 + 0],
-		   t_ap_fixed x[ 400 + 0],
-		   t_ap_fixed y[ 400 + 0])
+		   t_ap_fixed A[ 120 + 0][120 + 0],
+		   t_ap_fixed b[ 120 + 0],
+		   t_ap_fixed x[ 120 + 0],
+		   t_ap_fixed y[ 120 + 0])
 {
   int i, j, k;
 

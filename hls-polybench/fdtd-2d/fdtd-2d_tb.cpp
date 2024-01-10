@@ -6,19 +6,19 @@
 #include "fdtd-2d.h"
 
 
-t_ap_fixed ex[ 200 + 0][240 + 0];
-t_ap_fixed ey[ 200 + 0][240 + 0];
-t_ap_fixed hz[ 200 + 0][240 + 0];
-t_ap_fixed _fict_[ 100 + 0];
+t_ap_fixed ex[ 60 + 0][80 + 0];
+t_ap_fixed ey[ 60 + 0][80 + 0];
+t_ap_fixed hz[ 60 + 0][80 + 0];
+t_ap_fixed _fict_[ 40 + 0];
 
 
 void init_array (int tmax,
 		 int nx,
 		 int ny,
-		 t_ap_fixed ex[ 200 + 0][240 + 0],
-		 t_ap_fixed ey[ 200 + 0][240 + 0],
-		 t_ap_fixed hz[ 200 + 0][240 + 0],
-		 t_ap_fixed _fict_[ 100 + 0])
+		 t_ap_fixed ex[ 60 + 0][80 + 0],
+		 t_ap_fixed ey[ 60 + 0][80 + 0],
+		 t_ap_fixed hz[ 60 + 0][80 + 0],
+		 t_ap_fixed _fict_[ 40 + 0])
 {
   int i, j;
 
@@ -36,9 +36,9 @@ void init_array (int tmax,
 
 void print_array(int nx,
 		 int ny,
-		 t_ap_fixed ex[ 200 + 0][240 + 0],
-		 t_ap_fixed ey[ 200 + 0][240 + 0],
-		 t_ap_fixed hz[ 200 + 0][240 + 0])
+		 t_ap_fixed ex[ 60 + 0][80 + 0],
+		 t_ap_fixed ey[ 60 + 0][80 + 0],
+		 t_ap_fixed hz[ 60 + 0][80 + 0])
 {
   int i, j;
 
@@ -73,9 +73,9 @@ void print_array(int nx,
 int main(int argc, char** argv)
 {
 
-  int tmax = 100;
-  int nx = 200;
-  int ny = 240;
+  int tmax = 40;
+  int nx = 60;
+  int ny = 80;
 
 
   init_array (tmax, nx, ny,

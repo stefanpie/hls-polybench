@@ -6,13 +6,13 @@
 #include "jacobi-1d.h"
 
 
-t_ap_fixed A[ 400 + 0];
-t_ap_fixed B[ 400 + 0];
+t_ap_fixed A[ 120 + 0];
+t_ap_fixed B[ 120 + 0];
 
 
 void init_array (int n,
-		 t_ap_fixed A[ 400 + 0],
-		 t_ap_fixed B[ 400 + 0])
+		 t_ap_fixed A[ 120 + 0],
+		 t_ap_fixed B[ 120 + 0])
 {
   int i;
 
@@ -25,7 +25,7 @@ void init_array (int n,
 
 
 void print_array(int n,
-		 t_ap_fixed A[ 400 + 0])
+		 t_ap_fixed A[ 120 + 0])
 
 {
   int i;
@@ -45,8 +45,8 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 400;
-  int tsteps = 100;
+  int n = 120;
+  int tsteps = 40;
 
 
   init_array (n, A, B);

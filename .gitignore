@@ -1,5 +1,6 @@
 .vscode
 .mypy_cache
+.ruff_cache
 
 test_temp/
 errors/

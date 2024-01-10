@@ -3,12 +3,12 @@
 
 void kernel_heat_3d(int tsteps,
 		      int n,
-		      t_ap_fixed A[ 40 + 0][40 + 0][40 + 0],
-		      t_ap_fixed B[ 40 + 0][40 + 0][40 + 0])
+		      t_ap_fixed A[ 20 + 0][20 + 0][20 + 0],
+		      t_ap_fixed B[ 20 + 0][20 + 0][20 + 0])
 {
   int t, i, j, k;
 
-    for (t = 1; t <= 100; t++) {
+    for (t = 1; t <= 40; t++) {
         for (i = 1; i < n-1; i++) {
             for (j = 1; j < n-1; j++) {
                 for (k = 1; k < n-1; k++) {

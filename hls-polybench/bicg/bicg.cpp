@@ -2,11 +2,11 @@
 
 
 void kernel_bicg(int m, int n,
-		 t_ap_fixed A[ 410 + 0][390 + 0],
-		 t_ap_fixed s[ 390 + 0],
-		 t_ap_fixed q[ 410 + 0],
-		 t_ap_fixed p[ 390 + 0],
-		 t_ap_fixed r[ 410 + 0])
+		 t_ap_fixed A[ 124 + 0][116 + 0],
+		 t_ap_fixed s[ 116 + 0],
+		 t_ap_fixed q[ 124 + 0],
+		 t_ap_fixed p[ 116 + 0],
+		 t_ap_fixed r[ 124 + 0])
 {
   int i, j;
 

@@ -6,14 +6,14 @@
 #include "doitgen.h"
 
 
-t_ap_fixed A[ 50 + 0][40 + 0][60 + 0];
-t_ap_fixed sum[ 60 + 0];
-t_ap_fixed C4[ 60 + 0][60 + 0];
+t_ap_fixed A[ 25 + 0][20 + 0][30 + 0];
+t_ap_fixed sum[ 30 + 0];
+t_ap_fixed C4[ 30 + 0][30 + 0];
 
 
 void init_array(int nr, int nq, int np,
-		t_ap_fixed A[ 50 + 0][40 + 0][60 + 0],
-		t_ap_fixed C4[ 60 + 0][60 + 0])
+		t_ap_fixed A[ 25 + 0][20 + 0][30 + 0],
+		t_ap_fixed C4[ 30 + 0][30 + 0])
 {
   int i, j, k;
 
@@ -28,7 +28,7 @@ void init_array(int nr, int nq, int np,
 
 
 void print_array(int nr, int nq, int np,
-		 t_ap_fixed A[ 50 + 0][40 + 0][60 + 0])
+		 t_ap_fixed A[ 25 + 0][20 + 0][30 + 0])
 {
   int i, j, k;
 
@@ -48,9 +48,9 @@ void print_array(int nr, int nq, int np,
 int main(int argc, char** argv)
 {
 
-  int nr = 50;
-  int nq = 40;
-  int np = 60;
+  int nr = 25;
+  int nq = 20;
+  int np = 30;
 
 
   init_array (nr, nq, np,

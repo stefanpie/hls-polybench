@@ -6,17 +6,17 @@
 #include "gemm.h"
 
 
-t_ap_fixed C[ 200 + 0][220 + 0];
-t_ap_fixed A[ 200 + 0][240 + 0];
-t_ap_fixed B[ 240 + 0][220 + 0];
+t_ap_fixed C[ 60 + 0][70 + 0];
+t_ap_fixed A[ 60 + 0][80 + 0];
+t_ap_fixed B[ 80 + 0][70 + 0];
 
 
 void init_array(int ni, int nj, int nk,
 		t_ap_fixed *alpha,
 		t_ap_fixed *beta,
-		t_ap_fixed C[ 200 + 0][220 + 0],
-		t_ap_fixed A[ 200 + 0][240 + 0],
-		t_ap_fixed B[ 240 + 0][220 + 0])
+		t_ap_fixed C[ 60 + 0][70 + 0],
+		t_ap_fixed A[ 60 + 0][80 + 0],
+		t_ap_fixed B[ 80 + 0][70 + 0])
 {
   int i, j;
 
@@ -35,7 +35,7 @@ void init_array(int ni, int nj, int nk,
 
 
 void print_array(int ni, int nj,
-		 t_ap_fixed C[ 200 + 0][220 + 0])
+		 t_ap_fixed C[ 60 + 0][70 + 0])
 {
   int i, j;
 
@@ -54,9 +54,9 @@ void print_array(int ni, int nj,
 int main(int argc, char** argv)
 {
 
-  int ni = 200;
-  int nj = 220;
-  int nk = 240;
+  int ni = 60;
+  int nj = 70;
+  int nk = 80;
 
 
   t_ap_fixed alpha;

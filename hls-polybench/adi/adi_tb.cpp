@@ -6,14 +6,14 @@
 #include "adi.h"
 
 
-t_ap_fixed u[ 200 + 0][200 + 0];
-t_ap_fixed v[ 200 + 0][200 + 0];
-t_ap_fixed p[ 200 + 0][200 + 0];
-t_ap_fixed q[ 200 + 0][200 + 0];
+t_ap_fixed u[ 60 + 0][60 + 0];
+t_ap_fixed v[ 60 + 0][60 + 0];
+t_ap_fixed p[ 60 + 0][60 + 0];
+t_ap_fixed q[ 60 + 0][60 + 0];
 
 
 void init_array (int n,
-		 t_ap_fixed u[ 200 + 0][200 + 0])
+		 t_ap_fixed u[ 60 + 0][60 + 0])
 {
   int i, j;
 
@@ -26,7 +26,7 @@ void init_array (int n,
 
 
 void print_array(int n,
-		 t_ap_fixed u[ 200 + 0][200 + 0])
+		 t_ap_fixed u[ 60 + 0][60 + 0])
 
 {
   int i, j;
@@ -46,8 +46,8 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 200;
-  int tsteps = 100;
+  int n = 60;
+  int tsteps = 40;
 
 
   init_array (n, u);

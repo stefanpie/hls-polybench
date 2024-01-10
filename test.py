@@ -1,4 +1,5 @@
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -270,41 +271,41 @@ def main(args):
         if benchmark.stem not in benchmarks_to_skip
     ]
 
-    return_data_hls = joblib.Parallel(n_jobs=n_jobs, backend="multiprocessing")(
-        joblib.delayed(hls_synth_benchmark)(benchmark)
-        for benchmark in benchmarks_to_test
-    )
-    return_codes_hls_synthesis = return_data_hls
-    for return_code, benchmark in zip(return_codes_hls_synthesis, benchmarks_to_test):
-        if return_code != 0:
-            print(f"Failed to build benchmark {benchmark.name}")
-
-    # return_data = joblib.Parallel(n_jobs=n_jobs, backend="multiprocessing")(
-    #     joblib.delayed(compile_benchmark)(
-    #         benchmark, error_dir, output_dir, temp_dir_overide=temp_dir_overide
-    #     )
+    # return_data_hls = joblib.Parallel(n_jobs=n_jobs, backend="multiprocessing")(
+    #     joblib.delayed(hls_synth_benchmark)(benchmark)
     #     for benchmark in benchmarks_to_test
     # )
+    # return_codes_hls_synthesis = return_data_hls
+    # for return_code, benchmark in zip(return_codes_hls_synthesis, benchmarks_to_test):
+    #     if return_code != 0:
+    #         print(f"Failed to build benchmark {benchmark.name}")
 
-    # return_codes_compile, return_codes_run, data_error = zip(*return_data)
+    return_data = joblib.Parallel(n_jobs=n_jobs, backend="multiprocessing")(
+        joblib.delayed(compile_benchmark)(
+            benchmark, error_dir, output_dir, temp_dir_overide=temp_dir_overide
+        )
+        for benchmark in benchmarks_to_test
+    )
 
-    # if report_flag:
-    #     report_text = ""
-    #     report_text += "Polybench HLS Processed Test Report\n"
-    #     report_text += "----------------------------------\n"
-    #     report_text += "\n"
-    #     for benchmark, return_code_compile, return_code_run, error in zip(
-    #         benchmarks_to_test, return_codes_compile, return_codes_run, data_error
-    #     ):
-    #         report_text += f"BENCHMARK : {benchmark.stem}\n"
-    #         report_text += f"COMPILE   : {return_code_compile}\n"
-    #         report_text += f"RUN       : {return_code_run}\n"
-    #         if return_code_compile == 0 and return_code_run == 0:
-    #             report_text += "ERROR     :\n"
-    #             report_text += json.dumps(error, indent=4)
-    #         report_text += "\n\n"
+    return_codes_compile, return_codes_run, data_error = zip(*return_data)
 
-    #     report_file.write_text(report_text)
+    if report_flag:
+        report_text = ""
+        report_text += "Polybench HLS Processed Test Report\n"
+        report_text += "----------------------------------\n"
+        report_text += "\n"
+        for benchmark, return_code_compile, return_code_run, error in zip(
+            benchmarks_to_test, return_codes_compile, return_codes_run, data_error
+        ):
+            report_text += f"BENCHMARK : {benchmark.stem}\n"
+            report_text += f"COMPILE   : {return_code_compile}\n"
+            report_text += f"RUN       : {return_code_run}\n"
+            if return_code_compile == 0 and return_code_run == 0:
+                report_text += "ERROR     :\n"
+                report_text += json.dumps(error, indent=4)
+            report_text += "\n\n"
+
+        report_file.write_text(report_text)
 
 
 if __name__ == "__main__":

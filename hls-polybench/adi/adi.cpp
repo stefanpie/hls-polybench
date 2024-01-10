@@ -2,10 +2,10 @@
 
 
 void kernel_adi(int tsteps, int n,
-		t_ap_fixed u[ 200 + 0][200 + 0],
-		t_ap_fixed v[ 200 + 0][200 + 0],
-		t_ap_fixed p[ 200 + 0][200 + 0],
-		t_ap_fixed q[ 200 + 0][200 + 0])
+		t_ap_fixed u[ 60 + 0][60 + 0],
+		t_ap_fixed v[ 60 + 0][60 + 0],
+		t_ap_fixed p[ 60 + 0][60 + 0],
+		t_ap_fixed q[ 60 + 0][60 + 0])
 {
   int t, i, j;
   t_ap_fixed DX, DY, DT;

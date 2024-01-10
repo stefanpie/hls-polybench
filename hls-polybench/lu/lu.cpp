@@ -2,7 +2,7 @@
 
 
 void kernel_lu(int n,
-	       t_ap_fixed A[ 400 + 0][400 + 0])
+	       t_ap_fixed A[ 120 + 0][120 + 0])
 {
   int i, j, k;
 

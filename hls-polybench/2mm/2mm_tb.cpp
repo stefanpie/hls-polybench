@@ -6,20 +6,20 @@
 #include "2mm.h"
 
 
-t_ap_fixed tmp[ 180 + 0][190 + 0];
-t_ap_fixed A[ 180 + 0][210 + 0];
-t_ap_fixed B[ 210 + 0][190 + 0];
-t_ap_fixed C[ 190 + 0][220 + 0];
-t_ap_fixed D[ 180 + 0][220 + 0];
+t_ap_fixed tmp[ 40 + 0][50 + 0];
+t_ap_fixed A[ 40 + 0][70 + 0];
+t_ap_fixed B[ 70 + 0][50 + 0];
+t_ap_fixed C[ 50 + 0][80 + 0];
+t_ap_fixed D[ 40 + 0][80 + 0];
 
 
 void init_array(int ni, int nj, int nk, int nl,
 		t_ap_fixed *alpha,
 		t_ap_fixed *beta,
-		t_ap_fixed A[ 180 + 0][210 + 0],
-		t_ap_fixed B[ 210 + 0][190 + 0],
-		t_ap_fixed C[ 190 + 0][220 + 0],
-		t_ap_fixed D[ 180 + 0][220 + 0])
+		t_ap_fixed A[ 40 + 0][70 + 0],
+		t_ap_fixed B[ 70 + 0][50 + 0],
+		t_ap_fixed C[ 50 + 0][80 + 0],
+		t_ap_fixed D[ 40 + 0][80 + 0])
 {
   int i, j;
 
@@ -41,7 +41,7 @@ void init_array(int ni, int nj, int nk, int nl,
 
 
 void print_array(int ni, int nl,
-		 t_ap_fixed D[ 180 + 0][220 + 0])
+		 t_ap_fixed D[ 40 + 0][80 + 0])
 {
   int i, j;
 
@@ -60,10 +60,10 @@ void print_array(int ni, int nl,
 int main(int argc, char** argv)
 {
 
-  int ni = 180;
-  int nj = 190;
-  int nk = 210;
-  int nl = 220;
+  int ni = 40;
+  int nj = 50;
+  int nk = 70;
+  int nl = 80;
 
 
   t_ap_fixed alpha;

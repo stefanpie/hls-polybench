@@ -2,13 +2,13 @@
 #include "ap_fixed.h"
 #include "hls_math.h"
 
-typedef ap_fixed<48,16> t_ap_fixed;
+typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_symm(int m, int n,
 		 t_ap_fixed alpha,
 		 t_ap_fixed beta,
-		 t_ap_fixed C[ 200 + 0][240 + 0],
-		 t_ap_fixed A[ 200 + 0][200 + 0],
-		 t_ap_fixed B[ 200 + 0][240 + 0]);
+		 t_ap_fixed C[ 60 + 0][80 + 0],
+		 t_ap_fixed A[ 60 + 0][60 + 0],
+		 t_ap_fixed B[ 60 + 0][80 + 0]);
 }

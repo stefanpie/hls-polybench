@@ -6,19 +6,19 @@
 #include "mvt.h"
 
 
-t_ap_fixed A[ 400 + 0][400 + 0];
-t_ap_fixed x1[ 400 + 0];
-t_ap_fixed x2[ 400 + 0];
-t_ap_fixed y_1[ 400 + 0];
-t_ap_fixed y_2[ 400 + 0];
+t_ap_fixed A[ 120 + 0][120 + 0];
+t_ap_fixed x1[ 120 + 0];
+t_ap_fixed x2[ 120 + 0];
+t_ap_fixed y_1[ 120 + 0];
+t_ap_fixed y_2[ 120 + 0];
 
 
 void init_array(int n,
-		t_ap_fixed x1[ 400 + 0],
-		t_ap_fixed x2[ 400 + 0],
-		t_ap_fixed y_1[ 400 + 0],
-		t_ap_fixed y_2[ 400 + 0],
-		t_ap_fixed A[ 400 + 0][400 + 0])
+		t_ap_fixed x1[ 120 + 0],
+		t_ap_fixed x2[ 120 + 0],
+		t_ap_fixed y_1[ 120 + 0],
+		t_ap_fixed y_2[ 120 + 0],
+		t_ap_fixed A[ 120 + 0][120 + 0])
 {
   int i, j;
 
@@ -35,8 +35,8 @@ void init_array(int n,
 
 
 void print_array(int n,
-		 t_ap_fixed x1[ 400 + 0],
-		 t_ap_fixed x2[ 400 + 0])
+		 t_ap_fixed x1[ 120 + 0],
+		 t_ap_fixed x2[ 120 + 0])
 
 {
   int i;
@@ -62,7 +62,7 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 400;
+  int n = 120;
 
 
   init_array (n,

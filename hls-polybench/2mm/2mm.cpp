@@ -4,11 +4,11 @@
 void kernel_2mm(int ni, int nj, int nk, int nl,
 		t_ap_fixed alpha,
 		t_ap_fixed beta,
-		t_ap_fixed tmp[ 180 + 0][190 + 0],
-		t_ap_fixed A[ 180 + 0][210 + 0],
-		t_ap_fixed B[ 210 + 0][190 + 0],
-		t_ap_fixed C[ 190 + 0][220 + 0],
-		t_ap_fixed D[ 180 + 0][220 + 0])
+		t_ap_fixed tmp[ 40 + 0][50 + 0],
+		t_ap_fixed A[ 40 + 0][70 + 0],
+		t_ap_fixed B[ 70 + 0][50 + 0],
+		t_ap_fixed C[ 50 + 0][80 + 0],
+		t_ap_fixed D[ 40 + 0][80 + 0])
 {
   int i, j, k;
 

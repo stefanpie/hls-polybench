@@ -6,13 +6,13 @@
 #include "heat-3d.h"
 
 
-t_ap_fixed A[ 40 + 0][40 + 0][40 + 0];
-t_ap_fixed B[ 40 + 0][40 + 0][40 + 0];
+t_ap_fixed A[ 20 + 0][20 + 0][20 + 0];
+t_ap_fixed B[ 20 + 0][20 + 0][20 + 0];
 
 
 void init_array (int n,
-		 t_ap_fixed A[ 40 + 0][40 + 0][40 + 0],
-		 t_ap_fixed B[ 40 + 0][40 + 0][40 + 0])
+		 t_ap_fixed A[ 20 + 0][20 + 0][20 + 0],
+		 t_ap_fixed B[ 20 + 0][20 + 0][20 + 0])
 {
   int i, j, k;
 
@@ -24,7 +24,7 @@ void init_array (int n,
 
 
 void print_array(int n,
-		 t_ap_fixed A[ 40 + 0][40 + 0][40 + 0])
+		 t_ap_fixed A[ 20 + 0][20 + 0][20 + 0])
 
 {
   int i, j, k;
@@ -45,8 +45,8 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 40;
-  int tsteps = 100;
+  int n = 20;
+  int tsteps = 40;
 
 
   init_array (n, A, B);

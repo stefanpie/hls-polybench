@@ -4,10 +4,10 @@
 void kernel_fdtd_2d(int tmax,
 		    int nx,
 		    int ny,
-		    t_ap_fixed ex[ 200 + 0][240 + 0],
-		    t_ap_fixed ey[ 200 + 0][240 + 0],
-		    t_ap_fixed hz[ 200 + 0][240 + 0],
-		    t_ap_fixed _fict_[ 100 + 0])
+		    t_ap_fixed ex[ 60 + 0][80 + 0],
+		    t_ap_fixed ey[ 60 + 0][80 + 0],
+		    t_ap_fixed hz[ 60 + 0][80 + 0],
+		    t_ap_fixed _fict_[ 40 + 0])
 {
   int t, i, j;
 

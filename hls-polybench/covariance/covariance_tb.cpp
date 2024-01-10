@@ -6,27 +6,27 @@
 #include "covariance.h"
 
 
-t_ap_fixed data[ 260 + 0][240 + 0];
-t_ap_fixed cov[ 240 + 0][240 + 0];
-t_ap_fixed mean[ 240 + 0];
+t_ap_fixed data[ 100 + 0][80 + 0];
+t_ap_fixed cov[ 80 + 0][80 + 0];
+t_ap_fixed mean[ 80 + 0];
 
 
 void init_array (int m, int n,
 		 t_ap_fixed *float_n,
-		 t_ap_fixed data[ 260 + 0][240 + 0])
+		 t_ap_fixed data[ 100 + 0][80 + 0])
 {
   int i, j;
 
   *float_n = (t_ap_fixed)n;
 
-  for (i = 0; i < 260; i++)
-    for (j = 0; j < 240; j++)
-      data[i][j] = t_ap_fixed(i*j) / t_ap_fixed(240.0);
+  for (i = 0; i < 100; i++)
+    for (j = 0; j < 80; j++)
+      data[i][j] = t_ap_fixed(i*j) / t_ap_fixed(80.0);
 }
 
 
 void print_array(int m,
-		 t_ap_fixed cov[ 240 + 0][240 + 0])
+		 t_ap_fixed cov[ 80 + 0][80 + 0])
 
 {
   int i, j;
@@ -46,8 +46,8 @@ void print_array(int m,
 int main(int argc, char** argv)
 {
 
-  int n = 260;
-  int m = 240;
+  int n = 100;
+  int m = 80;
 
 
   t_ap_fixed float_n;

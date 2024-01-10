@@ -4,9 +4,9 @@
 void kernel_syr2k(int n, int m,
 		  t_ap_fixed alpha,
 		  t_ap_fixed beta,
-		  t_ap_fixed C[ 240 + 0][240 + 0],
-		  t_ap_fixed A[ 240 + 0][200 + 0],
-		  t_ap_fixed B[ 240 + 0][200 + 0])
+		  t_ap_fixed C[ 80 + 0][80 + 0],
+		  t_ap_fixed A[ 80 + 0][60 + 0],
+		  t_ap_fixed B[ 80 + 0][60 + 0])
 {
   int i, j, k;
   for (i = 0; i < n; i++) {

@@ -6,20 +6,20 @@
 #include "3mm.h"
 
 
-t_ap_fixed E[ 180 + 0][190 + 0];
-t_ap_fixed A[ 180 + 0][200 + 0];
-t_ap_fixed B[ 200 + 0][190 + 0];
-t_ap_fixed F[ 190 + 0][210 + 0];
-t_ap_fixed C[ 190 + 0][220 + 0];
-t_ap_fixed D[ 220 + 0][210 + 0];
-t_ap_fixed G[ 180 + 0][210 + 0];
+t_ap_fixed E[ 40 + 0][50 + 0];
+t_ap_fixed A[ 40 + 0][60 + 0];
+t_ap_fixed B[ 60 + 0][50 + 0];
+t_ap_fixed F[ 50 + 0][70 + 0];
+t_ap_fixed C[ 50 + 0][80 + 0];
+t_ap_fixed D[ 80 + 0][70 + 0];
+t_ap_fixed G[ 40 + 0][70 + 0];
 
 
 void init_array(int ni, int nj, int nk, int nl, int nm,
-		t_ap_fixed A[ 180 + 0][200 + 0],
-		t_ap_fixed B[ 200 + 0][190 + 0],
-		t_ap_fixed C[ 190 + 0][220 + 0],
-		t_ap_fixed D[ 220 + 0][210 + 0])
+		t_ap_fixed A[ 40 + 0][60 + 0],
+		t_ap_fixed B[ 60 + 0][50 + 0],
+		t_ap_fixed C[ 50 + 0][80 + 0],
+		t_ap_fixed D[ 80 + 0][70 + 0])
 {
   int i, j;
 
@@ -39,7 +39,7 @@ void init_array(int ni, int nj, int nk, int nl, int nm,
 
 
 void print_array(int ni, int nl,
-		 t_ap_fixed G[ 180 + 0][210 + 0])
+		 t_ap_fixed G[ 40 + 0][70 + 0])
 {
   int i, j;
 
@@ -58,11 +58,11 @@ void print_array(int ni, int nl,
 int main(int argc, char** argv)
 {
 
-  int ni = 180;
-  int nj = 190;
-  int nk = 200;
-  int nl = 210;
-  int nm = 220;
+  int ni = 40;
+  int nj = 50;
+  int nk = 60;
+  int nl = 70;
+  int nm = 80;
 
 
   init_array (ni, nj, nk, nl, nm,

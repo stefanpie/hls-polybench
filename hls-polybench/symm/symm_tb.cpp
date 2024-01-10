@@ -6,17 +6,17 @@
 #include "symm.h"
 
 
-t_ap_fixed C[ 200 + 0][240 + 0];
-t_ap_fixed A[ 200 + 0][200 + 0];
-t_ap_fixed B[ 200 + 0][240 + 0];
+t_ap_fixed C[ 60 + 0][80 + 0];
+t_ap_fixed A[ 60 + 0][60 + 0];
+t_ap_fixed B[ 60 + 0][80 + 0];
 
 
 void init_array(int m, int n,
 		t_ap_fixed *alpha,
 		t_ap_fixed *beta,
-		t_ap_fixed C[ 200 + 0][240 + 0],
-		t_ap_fixed A[ 200 + 0][200 + 0],
-		t_ap_fixed B[ 200 + 0][240 + 0])
+		t_ap_fixed C[ 60 + 0][80 + 0],
+		t_ap_fixed A[ 60 + 0][60 + 0],
+		t_ap_fixed B[ 60 + 0][80 + 0])
 {
   int i, j;
 
@@ -37,7 +37,7 @@ void init_array(int m, int n,
 
 
 void print_array(int m, int n,
-		 t_ap_fixed C[ 200 + 0][240 + 0])
+		 t_ap_fixed C[ 60 + 0][80 + 0])
 {
   int i, j;
 
@@ -56,8 +56,8 @@ void print_array(int m, int n,
 int main(int argc, char** argv)
 {
 
-  int m = 200;
-  int n = 240;
+  int m = 60;
+  int n = 80;
 
 
   t_ap_fixed alpha;

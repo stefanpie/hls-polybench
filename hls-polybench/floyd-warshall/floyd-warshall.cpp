@@ -1,6 +1,6 @@
 #include "floyd-warshall.h"
 void kernel_floyd_warshall(int n,
-			   int path[ 500 + 0][500 + 0])
+			   int path[ 180 + 0][180 + 0])
 {
   int i, j, k;
 
