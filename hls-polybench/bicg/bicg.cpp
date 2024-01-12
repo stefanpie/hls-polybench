@@ -8,6 +8,8 @@ void kernel_bicg(int m, int n,
 		 t_ap_fixed p[ 116 + 0],
 		 t_ap_fixed r[ 124 + 0])
 {
+  #pragma HLS top name=kernel_bicg
+
   int i, j;
 
   for (i = 0; i < m; i++)

@@ -6,6 +6,8 @@ void kernel_gramschmidt(int m, int n,
 			t_ap_fixed R[ 80 + 0][80 + 0],
 			t_ap_fixed Q[ 60 + 0][80 + 0])
 {
+  #pragma HLS top name=kernel_gramschmidt
+
   int i, j, k;
 
   t_ap_fixed nrm;

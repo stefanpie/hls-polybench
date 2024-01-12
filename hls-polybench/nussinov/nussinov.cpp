@@ -4,6 +4,8 @@
 void kernel_nussinov(int n, char seq[ 180 + 0],
 			   int table[ 180 + 0][180 + 0])
 {
+  #pragma HLS top name=kernel_nussinov
+
   int i, j, k;
 
  for (i = n-1; i >= 0; i--) {

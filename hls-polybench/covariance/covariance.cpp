@@ -7,6 +7,8 @@ void kernel_covariance(int m, int n,
 		       t_ap_fixed cov[ 80 + 0][80 + 0],
 		       t_ap_fixed mean[ 80 + 0])
 {
+  #pragma HLS top name=kernel_covariance
+
   int i, j, k;
 
   for (j = 0; j < m; j++)

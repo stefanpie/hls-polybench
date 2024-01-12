@@ -9,6 +9,8 @@ void kernel_fdtd_2d(int tmax,
 		    t_ap_fixed hz[ 60 + 0][80 + 0],
 		    t_ap_fixed _fict_[ 40 + 0])
 {
+  #pragma HLS top name=kernel_fdtd_2d
+
   int t, i, j;
 
 

@@ -5,6 +5,8 @@ void kernel_durbin(int n,
 		   t_ap_fixed r[ 120 + 0],
 		   t_ap_fixed y[ 120 + 0])
 {
+  #pragma HLS top name=kernel_durbin
+
  t_ap_fixed z[120];
  t_ap_fixed alpha;
  t_ap_fixed beta;

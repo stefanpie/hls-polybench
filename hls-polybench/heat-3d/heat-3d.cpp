@@ -6,6 +6,8 @@ void kernel_heat_3d(int tsteps,
 		      t_ap_fixed A[ 20 + 0][20 + 0][20 + 0],
 		      t_ap_fixed B[ 20 + 0][20 + 0][20 + 0])
 {
+  #pragma HLS top name=kernel_heat_3d
+
   int t, i, j, k;
 
     for (t = 1; t <= 40; t++) {

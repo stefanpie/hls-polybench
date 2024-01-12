@@ -10,6 +10,8 @@ void kernel_3mm(int ni, int nj, int nk, int nl, int nm,
 		t_ap_fixed D[ 80 + 0][70 + 0],
 		t_ap_fixed G[ 40 + 0][70 + 0])
 {
+  #pragma HLS top name=kernel_3mm
+
   int i, j, k;
 
 

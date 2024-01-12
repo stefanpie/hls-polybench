@@ -4,6 +4,8 @@
 void kernel_cholesky(int n,
 		     t_ap_fixed A[ 120 + 0][120 + 0])
 {
+  #pragma HLS top name=kernel_cholesky
+
   int i, j, k;
 
 

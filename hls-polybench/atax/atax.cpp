@@ -7,6 +7,8 @@ void kernel_atax(int m, int n,
 		 t_ap_fixed y[ 124 + 0],
 		 t_ap_fixed tmp[ 116 + 0])
 {
+  #pragma HLS top name=kernel_atax
+
   int i, j;
 
   for (i = 0; i < n; i++)

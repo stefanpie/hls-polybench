@@ -503,6 +503,27 @@ def move_array_declaration_to_outer_scope(c_fp: Path):
     add_new_lines_after_last_include(c_fp, array_declarations_text)
 
 
+def add_top_pragma(c_fp: Path, top_function: str):
+    c_text = c_fp.read_text()
+    top_function_start = c_text.find(top_function)
+    if top_function_start == -1:
+        raise ValueError(f"Could not find {top_function} function")
+
+    # find the first {
+    block_start = c_text.find("{", top_function_start)
+    if block_start == -1:
+        raise ValueError(f"Could not find opening brace of {top_function} function")
+
+    # add right after the first {
+    c_text = (
+        c_text[: block_start + 1]
+        + f"\n  #pragma HLS top name={top_function}\n"
+        + c_text[block_start + 1 :]
+    )
+
+    c_fp.write_text(c_text)
+
+
 def main(args):
     n_jobs = args.jobs
 
@@ -810,6 +831,11 @@ def main(args):
 
         # add_more_decimals_to_printf(new_benchmark_dir / (benchmark_name + "_tb.cpp"), 4)
 
+        add_top_pragma(
+            new_benchmark_dir / (benchmark_name + ".cpp"),
+            f"kernel_{benchmark_name.replace('-', '_')}",
+        )
+
         ### Special cases
 
         if benchmark_name == "nussinov":
@@ -998,7 +1024,7 @@ def main(args):
         makefile_fp = new_benchmark_dir / "Makefile"
         makefile_fp.write_text(makefile_text)
 
-        benchmark_size = 
+        # benchmark_size =
 
     Parallel(n_jobs=n_jobs)(
         delayed(process_benchmark)(benchmark) for benchmark in benchmark_list

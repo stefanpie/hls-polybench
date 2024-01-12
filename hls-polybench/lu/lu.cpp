@@ -4,6 +4,8 @@
 void kernel_lu(int n,
 	       t_ap_fixed A[ 120 + 0][120 + 0])
 {
+  #pragma HLS top name=kernel_lu
+
   int i, j, k;
 
   for (i = 0; i < n; i++) {

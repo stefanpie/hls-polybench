@@ -14,6 +14,8 @@ void kernel_gemver(int n,
 		   t_ap_fixed y[ 120 + 0],
 		   t_ap_fixed z[ 120 + 0])
 {
+  #pragma HLS top name=kernel_gemver
+
   int i, j;
 
 

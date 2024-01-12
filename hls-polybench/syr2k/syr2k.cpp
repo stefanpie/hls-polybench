@@ -8,6 +8,8 @@ void kernel_syr2k(int n, int m,
 		  t_ap_fixed A[ 80 + 0][60 + 0],
 		  t_ap_fixed B[ 80 + 0][60 + 0])
 {
+  #pragma HLS top name=kernel_syr2k
+
   int i, j, k;
   for (i = 0; i < n; i++) {
     for (j = 0; j <= i; j++)

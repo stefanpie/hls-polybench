@@ -10,6 +10,8 @@ void kernel_gesummv(int n,
 		    t_ap_fixed x[ 90 + 0],
 		    t_ap_fixed y[ 90 + 0])
 {
+  #pragma HLS top name=kernel_gesummv
+
   int i, j;
 
   for (i = 0; i < n; i++)

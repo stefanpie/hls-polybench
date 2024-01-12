@@ -8,6 +8,8 @@ void kernel_mvt(int n,
 		t_ap_fixed y_2[ 120 + 0],
 		t_ap_fixed A[ 120 + 0][120 + 0])
 {
+  #pragma HLS top name=kernel_mvt
+
   int i, j;
 
   for (i = 0; i < n; i++)

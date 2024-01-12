@@ -6,6 +6,8 @@ void kernel_doitgen(int nr, int nq, int np,
 		    t_ap_fixed C4[ 30 + 0][30 + 0],
 		    t_ap_fixed sum[ 30 + 0])
 {
+  #pragma HLS top name=kernel_doitgen
+
   int r, q, p, s;
 
   for (r = 0; r < nr; r++)

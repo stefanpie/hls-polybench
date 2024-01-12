@@ -5,6 +5,8 @@ void kernel_seidel_2d(int tsteps,
 		      int n,
 		      t_ap_fixed A[ 120 + 0][120 + 0])
 {
+  #pragma HLS top name=kernel_seidel_2d
+
   int t, i, j;
 
   for (t = 0; t <= tsteps - 1; t++)

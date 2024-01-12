@@ -10,6 +10,8 @@ void kernel_2mm(int ni, int nj, int nk, int nl,
 		t_ap_fixed C[ 50 + 0][80 + 0],
 		t_ap_fixed D[ 40 + 0][80 + 0])
 {
+  #pragma HLS top name=kernel_2mm
+
   int i, j, k;
 
 

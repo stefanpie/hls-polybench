@@ -8,6 +8,8 @@ void kernel_correlation(int m, int n,
 			t_ap_fixed mean[ 80 + 0],
 			t_ap_fixed stddev[ 80 + 0])
 {
+  #pragma HLS top name=kernel_correlation
+
   int i, j, k;
 
   t_ap_fixed eps = (t_ap_fixed(0.1));

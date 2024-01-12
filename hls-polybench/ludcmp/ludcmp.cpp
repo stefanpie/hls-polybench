@@ -7,6 +7,8 @@ void kernel_ludcmp(int n,
 		   t_ap_fixed x[ 120 + 0],
 		   t_ap_fixed y[ 120 + 0])
 {
+  #pragma HLS top name=kernel_ludcmp
+
   int i, j, k;
 
   t_ap_fixed w;

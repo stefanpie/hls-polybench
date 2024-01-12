@@ -6,6 +6,8 @@ void kernel_jacobi_1d(int tsteps,
 			    t_ap_fixed A[ 120 + 0],
 			    t_ap_fixed B[ 120 + 0])
 {
+  #pragma HLS top name=kernel_jacobi_1d
+
   int t, i;
 
   for (t = 0; t < tsteps; t++)

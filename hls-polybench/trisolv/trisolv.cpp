@@ -6,6 +6,8 @@ void kernel_trisolv(int n,
 		    t_ap_fixed x[ 120 + 0],
 		    t_ap_fixed b[ 120 + 0])
 {
+  #pragma HLS top name=kernel_trisolv
+
   int i, j;
 
   for (i = 0; i < n; i++)
