@@ -375,9 +375,9 @@ and gives the following as output:
 
 - $y$: The processed image. How the image is processed depends on the coefficients used.
 
-The generic 2D implementation reproduced from the original article [3] is as follows:
+The generic 2D implementation reproduced from the original article is as follows:
 
-## Horizontal Pass
+**Horizontal Pass**
 
 $$
 y_1(i, j) = a_1x(i, j) + a_2x(i, j - 1) + b_1y_1(i, j - 1) + b_2y_1(i, j - 2)
@@ -391,7 +391,7 @@ $$
 r(i, j) = c_1(y_1(i, j) + y_2(i, j))
 $$
 
-## Vertical Pass
+**Vertical Pass**
 
 $$
 z_1(i, j) = a_5r(i, j) + a_6r(i - 1, j) + b_1z_1(i - 1, j) + b_2z_1(i - 2, j)
@@ -446,3 +446,115 @@ w(i, j) & \text{if } k = -1 \\
 $$
 
 where the final output $paths(i, j) = p(N - 1, i, j)$.
+
+## nussinov
+
+Nussinov is an algorithm for predicting RNA folding, and is an instance of dynamic programming.
+It takes the following as input,
+
+- `seq`: RNA sequence of length $N$. The valid entries are one of 'A' 'G' 'C' 'T'. (or 'U' in place of 'T').
+
+and gives the following as output:
+
+- `table`: $N \times N$ triangular matrix, which is the dynamic programming table.
+
+The table is filled using the following formula:
+
+$$
+table(i,j) = \max
+\begin{cases}
+table(i+1,j) \\
+table(i,j-1) \\
+table(i+1,j-1) + w(i,j) \\
+\max_{i < k < j}(table(i,k) + table(k+1,j))
+\end{cases}
+$$
+
+where $w$ is the scoring function that evaluate the pair of sequences $seq[i]$ and $seq[j]$. For Nussinov algorithm, the scoring function returns 1 if the sequences are complementary (either 'A' with 'T' or 'G' with 'C'), and 0 otherwise.
+
+## adi
+
+Alternating Direction Implicit method for 2D heat diffusion. The main strength of ADI over other methods is that it decomposes a 2D problem to two 1D problems, allowing direct solutions to the sub-problems with lower cost. For 2D heat equations, each sub-problem becomes a tridiagonal system of equations.
+
+From a “stencil” point of view, this can be seen as taking the heat equation of the form:
+
+$$
+u^{t+1} = f \left(
+\begin{array}{ccc}
+& u^{t}_{i,j+1} & \\
+u^{t}_{i-1,j} & u^{t}_{i,j} & u^{t}_{i+1,j} \\
+& u^{t}_{i,j-1} & \\
+\end{array}
+\right)
+$$
+
+and splitting it two steps:
+
+$$
+u^{t+\frac{1}{2}} = g(u^{t}_{i+1,j}, u^{t}_{i,j}, u^{t}_{i-1,j})
+$$
+
+$$
+u^{t+1} = h \left( u^{t+\frac{1}{2}}_{i,j+1}, u^{t+\frac{1}{2}}_{i,j}, u^{t+\frac{1}{2}}_{i,j-1} \right)
+$$
+
+The C reference implementation is based on a Fortran code in a paper by Li and Kedem. In this implementation, the coefficients are also computed since the parameters configure the resolution and not the size of the space/time domain.
+
+## fdtd-2d
+
+Simplified Finite-Difference Time-Domain method for 2D data, which models electric and magnetic fields based on Maxwell’s equations. In particular, the polarization used here is \( TE^z \); Transverse Electric in \( z \) direction. It is a stencil involving three variables, \( Ex \), \( Ey \), and \( Hz \). \( Ex \) and \( Ey \) are electric fields varying in \( x \) and \( y \) axes, where \( Hz \) is the magnetic field along \( z \) axis. Fields along other axes are either zero or static, and are not modeled.
+
+$$
+\begin{align*}
+Hz_{(i,j)}^{t} &= C_{hzh} Hz_{(i,j)}^{t-1} + C_{hze} \left(Ex_{(i,j+1)}^{t-1} - Ex_{(i,j)}^{t-1} - Ey_{(i+1,j)}^{t-1} + Ey_{(i,j)}^{t-1}\right) \\
+Ex_{(i,j)}^{t} &= C_{exe} Ex_{(i,j)}^{t-1} + C_{exh} \left(Hz_{(i,j)}^{t} - Hz_{(i,j-1)}^{t}\right) \\
+Ey_{(i,j)}^{t} &= C_{eye} Ey_{(i,j)}^{t-1} + C_{eyh} \left(Hz_{(i,j)}^{t} - Hz_{(i-1,j)}^{t}\right)
+\end{align*}
+$$
+
+Variables \( C_{xxx} \) are coefficients that may be different depending on the location within the discretized space. In PolyBench, it is simplified as scalar coefficients.
+
+## heat-3d
+
+Heat Equation over 3D space. The main update is as follows:
+
+$$
+\begin{align*}
+data^{t}_{(i,j,k)} = & \ data^{t-1}_{(i,j,k)} \\
+& + 0.125 \cdot \left( data^{t-1}_{(i+1,j,k)} - 2 \cdot data^{t-1}_{(i,j,k)} + data^{t-1}_{(i-1,j,k)} \right) \\
+& + 0.125 \cdot \left( data^{t-1}_{(i,j+1,k)} - 2 \cdot data^{t-1}_{(i,j,k)} + data^{t-1}_{(i,j-1,k)} \right) \\
+& + 0.125 \cdot \left( data^{t-1}_{(i,j,k+1)} - 2 \cdot data^{t-1}_{(i,j,k)} + data^{t-1}_{(i,j,k-1)} \right)
+\end{align*}
+$$
+
+The C reference implementation is originally from Pochoir distribution.
+
+## jacobi-1d
+
+Jacobi style stencil computation over 1D data with 3-point stencil pattern. It originally comes from the Jacobi method for solving system of equations. However, Jacobi-style stencils may refer to computations with some stencil pattern that use values computed in the previous time step, which is a characteristic of Jacobi method. The computation in PolyBench is simplified as simply taking the average of three points.
+
+$$
+data^{t}_{(i)} = \frac{1}{3} \left( data^{t-1}_{(i)} + data^{t-1}_{(i-1)} + data^{t-1}_{(i+1)} \right)
+$$
+
+## jacobi-2d
+
+Jacobi-style stencil computation over 2D data with 5-point stencil pattern. The computation is simplified as simply taking the average of five points.
+
+$$
+data^{t}_{(i,j)} = \frac{1}{5} \left( data^{t-1}_{(i,j)} + data^{t-1}_{(i-1,j)} + data^{t-1}_{(i+1,j)} + data^{t-1}_{(i,j-1)} + data^{t-1}_{(i,j+1)} \right)
+$$
+
+## seidel-2d
+
+Gauss-Seidel style stencil computation over 2D data with 9-point stencil pattern. Similar to Jacobi style stencils, Gauss-Seidel style stencil comes from Gauss-Seidel method for solving systems of linear equations. The main difference is that values computed at the same time step is used, which changes its convergence and other properties. The computation in PolyBench is simplified as simply taking the average of nine points.
+
+$$
+\begin{aligned}
+data^{t}_{(i,j)} = \frac{1}{9} \big(
+& data^{t-1}_{(i-1,j-1)} + data^{t-1}_{(i-1,j)} + data^{t-1}_{(i-1,j+1)} \\
+& + data^{t-1}_{(i,j-1)} + data^{t}_{(i,j)} + data^{t-1}_{(i,j+1)} \\
+& + data^{t-1}_{(i+1,j-1)} + data^{t-1}_{(i+1,j)} + data^{t-1}_{(i+1,j+1)}
+\big)
+\end{aligned}
+$$

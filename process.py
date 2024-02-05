@@ -1241,6 +1241,39 @@ def main(args):
         delayed(process_benchmark)(benchmark) for benchmark in benchmark_list
     )
 
+    # gather kernel descriptions
+    kernel_descriptions = {}
+    kernel_description_md = (
+        Path(__file__).parent / "kernel_descriptions" / "kernel_descriptions.md"
+    )
+    kernel_description_md_text = kernel_description_md.read_text()
+    kernel_description_md_text = kernel_description_md_text.replace(
+        "# Kernel Descriptions", ""
+    )
+
+    kernel_header_matches = list(re.finditer("## (.+)", kernel_description_md_text))
+    kernel_header_match_text = [match.group(1) for match in kernel_header_matches]
+    kernel_header_locs_start = [match.span()[0] for match in kernel_header_matches]
+    for i in range(len(kernel_header_locs_start)):
+        if i < len(kernel_header_locs_start) - 1:
+            kernel_descriptions[
+                kernel_header_match_text[i]
+            ] = kernel_description_md_text[
+                kernel_header_locs_start[i] : kernel_header_locs_start[i + 1]
+            ]
+        else:
+            kernel_descriptions[
+                kernel_header_match_text[i]
+            ] = kernel_description_md_text[kernel_header_locs_start[i] :]
+
+    kernel_descriptions = {k: v.strip() for k, v in kernel_descriptions.items()}
+
+    for benchmark in benchmark_list:
+        benchmark_name = benchmark.stem
+        new_benchmark_dir = new_benchmarks_dir / benchmark_name
+        kernel_description_fp = new_benchmark_dir / "kernel_description.md"
+        kernel_description_fp.write_text(kernel_descriptions[benchmark_name])
+
     shutil.rmtree(tmp_dir)
     for folder in new_benchmarks_dir.glob("*"):
         shutil.move(folder, output_dir)
