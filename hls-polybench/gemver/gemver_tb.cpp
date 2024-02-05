@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 	      z);
 
 
-  kernel_gemver (n, alpha, beta,
+  kernel_gemver (alpha, beta,
 		 A,
 		 u1,
 		 v1,

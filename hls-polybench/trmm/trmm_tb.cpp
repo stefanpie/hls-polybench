@@ -61,7 +61,7 @@ int main(int argc, char** argv)
   init_array (m, n, &alpha, A, B);
 
 
-  kernel_trmm (m, n, alpha, A, B);
+  kernel_trmm (alpha, A, B);
 
 
   print_array(m, n, B);

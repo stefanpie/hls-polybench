@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	      B);
 
 
-  kernel_gemm (ni, nj, nk,
+  kernel_gemm (
 	       alpha, beta,
 	       C,
 	       A,

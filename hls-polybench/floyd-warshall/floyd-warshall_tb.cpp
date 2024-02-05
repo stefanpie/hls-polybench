@@ -50,7 +50,7 @@ int main(int argc, char** argv)
   init_array (n, path);
 
 
-  kernel_floyd_warshall (n, path);
+  kernel_floyd_warshall (path);
 
 
   print_array(n, path);

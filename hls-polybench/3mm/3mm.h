@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_3mm(int ni, int nj, int nk, int nl, int nm,
+void kernel_3mm(    
 		t_ap_fixed E[ 40 + 0][50 + 0],
 		t_ap_fixed A[ 40 + 0][60 + 0],
 		t_ap_fixed B[ 60 + 0][50 + 0],

@@ -1,7 +1,7 @@
 #include "2mm.h"
 
 
-void kernel_2mm(int ni, int nj, int nk, int nl,
+void kernel_2mm(   
 		t_ap_fixed alpha,
 		t_ap_fixed beta,
 		t_ap_fixed tmp[ 40 + 0][50 + 0],
@@ -11,6 +11,11 @@ void kernel_2mm(int ni, int nj, int nk, int nl,
 		t_ap_fixed D[ 40 + 0][80 + 0])
 {
   #pragma HLS top name=kernel_2mm
+
+    const int ni = 40;
+    const int nj = 50;
+    const int nk = 70;
+    const int nl = 80;
 
   int i, j, k;
 

@@ -60,7 +60,7 @@ int main(int argc, char** argv)
   init_array (n, m, &alpha, &beta, C, A);
 
 
-  kernel_syrk (n, m, alpha, beta, C, A);
+  kernel_syrk (alpha, beta, C, A);
 
 
   print_array(n, C);

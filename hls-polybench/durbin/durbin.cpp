@@ -1,11 +1,13 @@
 #include "durbin.h"
 
 
-void kernel_durbin(int n,
+void kernel_durbin(
 		   t_ap_fixed r[ 120 + 0],
 		   t_ap_fixed y[ 120 + 0])
 {
   #pragma HLS top name=kernel_durbin
+
+    const int n = 120;
 
  t_ap_fixed z[120];
  t_ap_fixed alpha;

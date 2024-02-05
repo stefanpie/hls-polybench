@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 	      _fict_);
 
 
-  kernel_fdtd_2d (tmax, nx, ny,
+  kernel_fdtd_2d (
 		  ex,
 		  ey,
 		  hz,

@@ -69,7 +69,7 @@ int main(int argc, char** argv)
   init_array (n, A);
 
 
-  kernel_lu (n, A);
+  kernel_lu (A);
 
 
   print_array(n, A);

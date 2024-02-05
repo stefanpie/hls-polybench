@@ -48,7 +48,7 @@ int main(int argc, char** argv)
   init_array (n, r);
 
 
-  kernel_durbin (n,
+  kernel_durbin (
 		 r,
 		 y);
 

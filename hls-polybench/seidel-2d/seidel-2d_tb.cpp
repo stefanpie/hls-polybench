@@ -48,7 +48,7 @@ int main(int argc, char** argv)
   init_array (n, A);
 
 
-  kernel_seidel_2d (tsteps, n, A);
+  kernel_seidel_2d ( A);
 
 
   print_array(n, A);

@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 	      D);
 
 
-  kernel_2mm (ni, nj, nk, nl,
+  kernel_2mm (
 	      alpha, beta,
 	      tmp,
 	      A,

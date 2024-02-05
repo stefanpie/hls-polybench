@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_trmm(int m, int n,
+void kernel_trmm( 
 		 t_ap_fixed alpha,
 		 t_ap_fixed A[ 60 + 0][60 + 0],
 		 t_ap_fixed B[ 60 + 0][80 + 0]);

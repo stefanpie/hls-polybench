@@ -1,13 +1,16 @@
 #include "adi.h"
 
 
-void kernel_adi(int tsteps, int n,
+void kernel_adi( 
 		t_ap_fixed u[ 60 + 0][60 + 0],
 		t_ap_fixed v[ 60 + 0][60 + 0],
 		t_ap_fixed p[ 60 + 0][60 + 0],
 		t_ap_fixed q[ 60 + 0][60 + 0])
 {
   #pragma HLS top name=kernel_adi
+
+    const int n = 60;
+    const int tsteps = 40;
 
   int t, i, j;
   t_ap_fixed DX, DY, DT;

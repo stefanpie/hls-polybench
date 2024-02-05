@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 	      B);
 
 
-  kernel_syr2k (n, m,
+  kernel_syr2k (
 		alpha, beta,
 		C,
 		A,

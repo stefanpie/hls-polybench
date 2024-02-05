@@ -1,12 +1,15 @@
 #include "trmm.h"
 
 
-void kernel_trmm(int m, int n,
+void kernel_trmm( 
 		 t_ap_fixed alpha,
 		 t_ap_fixed A[ 60 + 0][60 + 0],
 		 t_ap_fixed B[ 60 + 0][80 + 0])
 {
   #pragma HLS top name=kernel_trmm
+
+    const int m = 60;
+    const int n = 80;
 
   int i, j, k;
   for (i = 0; i < m; i++)

@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_gemver(int n,
+void kernel_gemver(
 		   t_ap_fixed alpha,
 		   t_ap_fixed beta,
 		   t_ap_fixed A[ 120 + 0][120 + 0],

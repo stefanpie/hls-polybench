@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_gesummv(int n,
+void kernel_gesummv(
 		    t_ap_fixed alpha,
 		    t_ap_fixed beta,
 		    t_ap_fixed A[ 90 + 0][90 + 0],

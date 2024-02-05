@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 	      C4);
 
 
-  kernel_doitgen (nr, nq, np,
+  kernel_doitgen (
 		  A,
 		  C4,
 		  sum);

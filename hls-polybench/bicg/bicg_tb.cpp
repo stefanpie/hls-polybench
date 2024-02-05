@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 	      p);
 
 
-  kernel_bicg (m, n,
+  kernel_bicg (
 	       A,
 	       s,
 	       q,

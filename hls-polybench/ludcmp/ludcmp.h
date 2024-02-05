@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_ludcmp(int n,
+void kernel_ludcmp(
 		   t_ap_fixed A[ 120 + 0][120 + 0],
 		   t_ap_fixed b[ 120 + 0],
 		   t_ap_fixed x[ 120 + 0],

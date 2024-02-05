@@ -1,7 +1,7 @@
 #include "bicg.h"
 
 
-void kernel_bicg(int m, int n,
+void kernel_bicg( 
 		 t_ap_fixed A[ 124 + 0][116 + 0],
 		 t_ap_fixed s[ 116 + 0],
 		 t_ap_fixed q[ 124 + 0],
@@ -9,6 +9,9 @@ void kernel_bicg(int m, int n,
 		 t_ap_fixed r[ 124 + 0])
 {
   #pragma HLS top name=kernel_bicg
+
+    const int n = 124;
+    const int m = 116;
 
   int i, j;
 

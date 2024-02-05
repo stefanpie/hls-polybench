@@ -54,7 +54,7 @@ int main(int argc, char** argv)
   init_array (n, L, x, b);
 
 
-  kernel_trisolv (n, L, x, b);
+  kernel_trisolv (L, x, b);
 
 
   print_array(n, x);

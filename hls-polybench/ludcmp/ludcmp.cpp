@@ -1,13 +1,15 @@
 #include "ludcmp.h"
 
 
-void kernel_ludcmp(int n,
+void kernel_ludcmp(
 		   t_ap_fixed A[ 120 + 0][120 + 0],
 		   t_ap_fixed b[ 120 + 0],
 		   t_ap_fixed x[ 120 + 0],
 		   t_ap_fixed y[ 120 + 0])
 {
   #pragma HLS top name=kernel_ludcmp
+
+    const int n = 120;
 
   int i, j, k;
 

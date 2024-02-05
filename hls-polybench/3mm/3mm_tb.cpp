@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 	      D);
 
 
-  kernel_3mm (ni, nj, nk, nl, nm,
+  kernel_3mm (
 	      E,
 	      A,
 	      B,

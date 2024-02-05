@@ -1,0 +1,6 @@
+Turn this into markdown with latex for the math.
+Use `$` and `$$` formatting for all inline and block latex sections.
+Do not use `\[` and `\]` and `\(` and `\)` for latex sections; please only use `$$` for block latex and `$` for inline latex.
+Use latex math symbols for all math symbols.
+Use `-` for all lists.
+Please follow all the specifications for formatting.

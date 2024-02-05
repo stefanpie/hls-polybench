@@ -5,8 +5,8 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_jacobi_1d(int tsteps,
-			    int n,
+void kernel_jacobi_1d(
+			    
 			    t_ap_fixed A[ 120 + 0],
 			    t_ap_fixed B[ 120 + 0]);
 }

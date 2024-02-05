@@ -1,13 +1,16 @@
 #include "covariance.h"
 
 
-void kernel_covariance(int m, int n,
+void kernel_covariance( 
 		       t_ap_fixed float_n,
 		       t_ap_fixed data[ 100 + 0][80 + 0],
 		       t_ap_fixed cov[ 80 + 0][80 + 0],
 		       t_ap_fixed mean[ 80 + 0])
 {
   #pragma HLS top name=kernel_covariance
+
+    const int n = 100;
+    const int m = 80;
 
   int i, j, k;
 

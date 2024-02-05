@@ -524,6 +524,201 @@ def add_top_pragma(c_fp: Path, top_function: str):
     c_fp.write_text(c_text)
 
 
+def get_const_int_vals_in_main(c_fp: Path):
+    c_text = c_fp.read_text()
+    main_start = c_text.find("int main")
+    if main_start == -1:
+        raise ValueError("Could not find main function")
+    block_start = c_text.find("{", main_start)
+    if block_start == -1:
+        raise ValueError("Could not find opening brace of main function")
+
+    # keep track of {} nesting
+    nesting = 1
+    for i in range(block_start + 1, len(c_text)):
+        if c_text[i] == "{":
+            nesting += 1
+        elif c_text[i] == "}":
+            nesting -= 1
+        if nesting == 0:
+            main_end = i
+            break
+    else:
+        raise ValueError("Could not find closing brace of main function")
+
+    main_text = c_text[main_start:main_end]
+    RE_INT_DECL = re.compile(r"int\s+(\w+)\s*=\s*(\d+);")
+    int_decls = {
+        match.group(1): int(match.group(2)) for match in RE_INT_DECL.finditer(main_text)
+    }
+    return int_decls
+
+
+def modify_kernel_to_fix_int_decls_to_local_constants(
+    c_fp: Path, int_decls: dict[str, int]
+):
+    c_text = c_fp.read_text()
+    function_signature_start = c_text.find("void kernel_")
+    function_signature_end = c_text.find("{", function_signature_start)
+
+    for var, val in int_decls.items():
+        match = re.search(
+            rf"int {var},", c_text[function_signature_start:function_signature_end]
+        )
+        if match:
+            start, end = match.span()
+            start = function_signature_start + start
+            end = function_signature_start + end
+            c_text = c_text[:start] + c_text[end:]
+            function_signature_start = function_signature_start
+            function_signature_end = function_signature_end - (end - start)
+        else:
+            raise ValueError(f"Could not find {var} in function signature")
+
+    # find the start of the function body
+    function_signature_start = c_text.find("void kernel_")
+    function_signature_end = c_text.find("{", function_signature_start)
+    # add the local constants
+
+    new_lines = []
+    for var, val in int_decls.items():
+        new_lines.append(f"    const int {var} = {val};")
+    new_lines_str = "\n".join(new_lines)
+
+    # check to see if there is a top pragma already here
+    top_pragma_loc = c_text.find("#pragma HLS top")
+    if top_pragma_loc != -1:
+        top_pragma_end = c_text.find("\n", top_pragma_loc)
+        c_text = (
+            c_text[: top_pragma_end + 1]
+            + "\n"
+            + new_lines_str
+            + "\n"
+            + c_text[top_pragma_end + 1 :]
+        )
+    else:
+        c_text = (
+            c_text[: function_signature_end + 1]
+            + "\n"
+            + new_lines_str
+            + "\n"
+            + c_text[function_signature_end + 1 :]
+        )
+
+    c_fp.write_text(c_text)
+
+
+def main_start_end(c_text) -> tuple[int, int]:
+    main_start = c_text.find("int main")
+    if main_start == -1:
+        raise ValueError("Could not find main function")
+    block_start = c_text.find("{", main_start)
+    if block_start == -1:
+        raise ValueError("Could not find opening brace of main function")
+
+    # keep track of {} nesting
+    nesting = 1
+    for i in range(block_start + 1, len(c_text)):
+        if c_text[i] == "{":
+            nesting += 1
+        elif c_text[i] == "}":
+            nesting -= 1
+        if nesting == 0:
+            main_end = i
+            break
+    else:
+        raise ValueError("Could not find closing brace of main function")
+    return main_start, main_end
+
+
+def remove_int_decls_from_kernel_call(c_fp: Path, int_decls: dict[str, int]):
+    c_text = c_fp.read_text()
+
+    for var in int_decls:
+        main_start, main_end = main_start_end(c_text)
+
+        # find the kernel call
+        kernel_call_start = c_text.find("kernel_", main_start, main_end)
+        kernel_call_end = c_text.find(";", kernel_call_start, main_end)
+
+        # (a, b, c) -> (b, c)
+        match_case_1 = re.search(
+            rf"\({var}, ", c_text[kernel_call_start:kernel_call_end]
+        )
+        if match_case_1:
+            start, end = match_case_1.span()
+            start = kernel_call_start + start
+            end = kernel_call_start + end
+            # dont remove the first (
+            c_text = c_text[: start + 1] + c_text[end:]
+
+        # (a,
+        #  b, c) -> (b, c)
+        match_case_2 = re.search(
+            rf"\({var},", c_text[kernel_call_start:kernel_call_end]
+        )
+        if match_case_2:
+            start, end = match_case_2.span()
+            start = kernel_call_start + start
+            end = kernel_call_start + end
+            # dont remove the first (
+            c_text = c_text[: start + 1] + c_text[end:]
+
+        # (a, b, c) -> (a, b)
+        match_case_3 = re.search(
+            rf", {var}\)", c_text[kernel_call_start:kernel_call_end]
+        )
+        if match_case_3:
+            start, end = match_case_3.span()
+            start = kernel_call_start + start
+            end = kernel_call_start + end
+            # dont remove the last )
+            c_text = c_text[:start] + c_text[end - 1 :]
+
+        # (a, b, c) -> (b, c)
+        match_case_4 = re.search(
+            rf", {var},", c_text[kernel_call_start:kernel_call_end]
+        )
+        if match_case_4:
+            start, end = match_case_4.span()
+            start = kernel_call_start + start
+            end = kernel_call_start + end
+            # dont remove the first ,
+            c_text = c_text[: start + 2] + c_text[end:]
+
+        if (
+            not match_case_1
+            and not match_case_2
+            and not match_case_3
+            and not match_case_4
+        ):
+            raise ValueError(f"Could not find {var} in kernel call")
+
+    c_fp.write_text(c_text)
+
+
+def remove_int_decls_from_kernel_declaration(c_fp, int_decls):
+    c_text = c_fp.read_text()
+    function_signature_start = c_text.find("void kernel_")
+    function_signature_end = c_text.find("{", function_signature_start)
+
+    for var, val in int_decls.items():
+        match = re.search(
+            rf"int {var},", c_text[function_signature_start:function_signature_end]
+        )
+        if match:
+            start, end = match.span()
+            start = function_signature_start + start
+            end = function_signature_start + end
+            c_text = c_text[:start] + c_text[end:]
+            function_signature_start = function_signature_start
+            function_signature_end = function_signature_end - (end - start)
+        else:
+            raise ValueError(f"Could not find {var} in function signature")
+
+    c_fp.write_text(c_text)
+
+
 def main(args):
     n_jobs = args.jobs
 
@@ -834,6 +1029,22 @@ def main(args):
         add_top_pragma(
             new_benchmark_dir / (benchmark_name + ".cpp"),
             f"kernel_{benchmark_name.replace('-', '_')}",
+        )
+
+        int_decls = get_const_int_vals_in_main(
+            new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        )
+
+        modify_kernel_to_fix_int_decls_to_local_constants(
+            new_benchmark_dir / (benchmark_name + ".cpp"), int_decls
+        )
+
+        remove_int_decls_from_kernel_call(
+            new_benchmark_dir / (benchmark_name + "_tb.cpp"), int_decls
+        )
+
+        remove_int_decls_from_kernel_declaration(
+            new_benchmark_dir / (benchmark_name + ".h"), int_decls
         )
 
         ### Special cases

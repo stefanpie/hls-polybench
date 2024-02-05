@@ -1,12 +1,15 @@
 #include "jacobi-1d.h"
 
 
-void kernel_jacobi_1d(int tsteps,
-			    int n,
+void kernel_jacobi_1d(
+			    
 			    t_ap_fixed A[ 120 + 0],
 			    t_ap_fixed B[ 120 + 0])
 {
   #pragma HLS top name=kernel_jacobi_1d
+
+    const int n = 120;
+    const int tsteps = 40;
 
   int t, i;
 

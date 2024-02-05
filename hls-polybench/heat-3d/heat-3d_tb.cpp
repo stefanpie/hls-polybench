@@ -52,7 +52,7 @@ int main(int argc, char** argv)
   init_array (n, A, B);
 
 
-  kernel_heat_3d (tsteps, n, A, B);
+  kernel_heat_3d ( A, B);
 
 
   print_array(n, A);

@@ -57,7 +57,7 @@ int main(int argc, char** argv)
   init_array (n, seq, table);
 
 
-  kernel_nussinov (n, seq, table);
+  kernel_nussinov (seq, table);
 
 
   print_array(n, table);

@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 	      x);
 
 
-  kernel_gesummv (n, alpha, beta,
+  kernel_gesummv (alpha, beta,
 		  A,
 		  B,
 		  tmp,

@@ -59,7 +59,7 @@ int main(int argc, char** argv)
   init_array (m, n, &float_n, data);
 
 
-  kernel_correlation (m, n, float_n,
+  kernel_correlation ( float_n,
 		      data,
 		      corr,
 		      mean,

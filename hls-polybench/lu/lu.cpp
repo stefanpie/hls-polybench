@@ -1,10 +1,12 @@
 #include "lu.h"
 
 
-void kernel_lu(int n,
+void kernel_lu(
 	       t_ap_fixed A[ 120 + 0][120 + 0])
 {
   #pragma HLS top name=kernel_lu
+
+    const int n = 120;
 
   int i, j, k;
 

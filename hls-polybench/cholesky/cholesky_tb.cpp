@@ -69,7 +69,7 @@ int main(int argc, char** argv)
   init_array (n, A);
 
 
-  kernel_cholesky (n, A);
+  kernel_cholesky (A);
 
 
   print_array(n, A);

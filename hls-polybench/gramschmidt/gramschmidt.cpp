@@ -1,12 +1,15 @@
 #include "gramschmidt.h"
 
 
-void kernel_gramschmidt(int m, int n,
+void kernel_gramschmidt( 
 			t_ap_fixed A[ 60 + 0][80 + 0],
 			t_ap_fixed R[ 80 + 0][80 + 0],
 			t_ap_fixed Q[ 60 + 0][80 + 0])
 {
   #pragma HLS top name=kernel_gramschmidt
+
+    const int m = 60;
+    const int n = 80;
 
   int i, j, k;
 

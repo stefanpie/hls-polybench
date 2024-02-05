@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 	      B);
 
 
-  kernel_symm (m, n,
+  kernel_symm (
 	       alpha, beta,
 	       C,
 	       A,

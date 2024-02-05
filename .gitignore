@@ -2,6 +2,7 @@
 .mypy_cache
 .ruff_cache
 
-test_temp/
+test_temp_compile/
+test_temp_synth/
 errors/
 output/

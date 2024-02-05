@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_durbin(int n,
+void kernel_durbin(
 		   t_ap_fixed r[ 120 + 0],
 		   t_ap_fixed y[ 120 + 0]);
 }

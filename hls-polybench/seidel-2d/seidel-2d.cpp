@@ -1,11 +1,14 @@
 #include "seidel-2d.h"
 
 
-void kernel_seidel_2d(int tsteps,
-		      int n,
+void kernel_seidel_2d(
+		      
 		      t_ap_fixed A[ 120 + 0][120 + 0])
 {
   #pragma HLS top name=kernel_seidel_2d
+
+    const int n = 120;
+    const int tsteps = 40;
 
   int t, i, j;
 

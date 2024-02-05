@@ -1,7 +1,7 @@
 #include "3mm.h"
 
 
-void kernel_3mm(int ni, int nj, int nk, int nl, int nm,
+void kernel_3mm(    
 		t_ap_fixed E[ 40 + 0][50 + 0],
 		t_ap_fixed A[ 40 + 0][60 + 0],
 		t_ap_fixed B[ 60 + 0][50 + 0],
@@ -11,6 +11,12 @@ void kernel_3mm(int ni, int nj, int nk, int nl, int nm,
 		t_ap_fixed G[ 40 + 0][70 + 0])
 {
   #pragma HLS top name=kernel_3mm
+
+    const int ni = 40;
+    const int nj = 50;
+    const int nk = 60;
+    const int nl = 70;
+    const int nm = 80;
 
   int i, j, k;
 

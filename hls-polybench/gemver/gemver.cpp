@@ -1,7 +1,7 @@
 #include "gemver.h"
 
 
-void kernel_gemver(int n,
+void kernel_gemver(
 		   t_ap_fixed alpha,
 		   t_ap_fixed beta,
 		   t_ap_fixed A[ 120 + 0][120 + 0],
@@ -15,6 +15,8 @@ void kernel_gemver(int n,
 		   t_ap_fixed z[ 120 + 0])
 {
   #pragma HLS top name=kernel_gemver
+
+    const int n = 120;
 
   int i, j;
 

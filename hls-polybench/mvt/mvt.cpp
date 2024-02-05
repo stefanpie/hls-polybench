@@ -1,7 +1,7 @@
 #include "mvt.h"
 
 
-void kernel_mvt(int n,
+void kernel_mvt(
 		t_ap_fixed x1[ 120 + 0],
 		t_ap_fixed x2[ 120 + 0],
 		t_ap_fixed y_1[ 120 + 0],
@@ -9,6 +9,8 @@ void kernel_mvt(int n,
 		t_ap_fixed A[ 120 + 0][120 + 0])
 {
   #pragma HLS top name=kernel_mvt
+
+    const int n = 120;
 
   int i, j;
 

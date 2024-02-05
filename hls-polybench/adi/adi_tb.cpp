@@ -53,7 +53,7 @@ int main(int argc, char** argv)
   init_array (n, u);
 
 
-  kernel_adi (tsteps, n, u, v, p, q);
+  kernel_adi ( u, v, p, q);
 
 
   print_array(n, u);

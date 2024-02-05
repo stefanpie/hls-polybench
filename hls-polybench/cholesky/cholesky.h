@@ -5,6 +5,6 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_cholesky(int n,
+void kernel_cholesky(
 		     t_ap_fixed A[ 120 + 0][120 + 0]);
 }

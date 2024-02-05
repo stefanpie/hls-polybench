@@ -4,6 +4,6 @@
 
 
 extern "C" {
-void kernel_floyd_warshall(int n,
+void kernel_floyd_warshall(
 			   int path[ 180 + 0][180 + 0]);
 }

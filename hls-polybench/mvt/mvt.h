@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_mvt(int n,
+void kernel_mvt(
 		t_ap_fixed x1[ 120 + 0],
 		t_ap_fixed x2[ 120 + 0],
 		t_ap_fixed y_1[ 120 + 0],

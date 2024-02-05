@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	      Q);
 
 
-  kernel_gramschmidt (m, n,
+  kernel_gramschmidt (
 		      A,
 		      R,
 		      Q);

@@ -58,7 +58,7 @@ int main(int argc, char** argv)
   init_array (w, h, &alpha, imgIn, imgOut);
 
 
-  kernel_deriche (w, h, alpha, imgIn, imgOut, y1, y2);
+  kernel_deriche (alpha, imgIn, imgOut, y1, y2);
 
 
   print_array(w, h, imgOut);

@@ -1,7 +1,7 @@
 #include "symm.h"
 
 
-void kernel_symm(int m, int n,
+void kernel_symm( 
 		 t_ap_fixed alpha,
 		 t_ap_fixed beta,
 		 t_ap_fixed C[ 60 + 0][80 + 0],
@@ -9,6 +9,9 @@ void kernel_symm(int m, int n,
 		 t_ap_fixed B[ 60 + 0][80 + 0])
 {
   #pragma HLS top name=kernel_symm
+
+    const int m = 60;
+    const int n = 80;
 
   int i, j, k;
   t_ap_fixed temp2;

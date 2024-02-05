@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_doitgen(int nr, int nq, int np,
+void kernel_doitgen(  
 		    t_ap_fixed A[ 25 + 0][20 + 0][30 + 0],
 		    t_ap_fixed C4[ 30 + 0][30 + 0],
 		    t_ap_fixed sum[ 30 + 0]);

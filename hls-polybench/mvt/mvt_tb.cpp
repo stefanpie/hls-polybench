@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 	      A);
 
 
-  kernel_mvt (n,
+  kernel_mvt (
 	      x1,
 	      x2,
 	      y_1,

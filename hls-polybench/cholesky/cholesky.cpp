@@ -1,10 +1,12 @@
 #include "cholesky.h"
 
 
-void kernel_cholesky(int n,
+void kernel_cholesky(
 		     t_ap_fixed A[ 120 + 0][120 + 0])
 {
   #pragma HLS top name=kernel_cholesky
+
+    const int n = 120;
 
   int i, j, k;
 

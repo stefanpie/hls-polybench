@@ -1,12 +1,15 @@
 #include "heat-3d.h"
 
 
-void kernel_heat_3d(int tsteps,
-		      int n,
+void kernel_heat_3d(
+		      
 		      t_ap_fixed A[ 20 + 0][20 + 0][20 + 0],
 		      t_ap_fixed B[ 20 + 0][20 + 0][20 + 0])
 {
   #pragma HLS top name=kernel_heat_3d
+
+    const int n = 20;
+    const int tsteps = 40;
 
   int t, i, j, k;
 

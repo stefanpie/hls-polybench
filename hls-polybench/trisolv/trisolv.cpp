@@ -1,12 +1,14 @@
 #include "trisolv.h"
 
 
-void kernel_trisolv(int n,
+void kernel_trisolv(
 		    t_ap_fixed L[ 120 + 0][120 + 0],
 		    t_ap_fixed x[ 120 + 0],
 		    t_ap_fixed b[ 120 + 0])
 {
   #pragma HLS top name=kernel_trisolv
+
+    const int n = 120;
 
   int i, j;
 

@@ -1,15 +1,19 @@
 #include "fdtd-2d.h"
 
 
-void kernel_fdtd_2d(int tmax,
-		    int nx,
-		    int ny,
+void kernel_fdtd_2d(
+		    
+		    
 		    t_ap_fixed ex[ 60 + 0][80 + 0],
 		    t_ap_fixed ey[ 60 + 0][80 + 0],
 		    t_ap_fixed hz[ 60 + 0][80 + 0],
 		    t_ap_fixed _fict_[ 40 + 0])
 {
   #pragma HLS top name=kernel_fdtd_2d
+
+    const int tmax = 40;
+    const int nx = 60;
+    const int ny = 80;
 
   int t, i, j;
 

@@ -55,7 +55,7 @@ int main(int argc, char** argv)
   init_array (m, n, A, x);
 
 
-  kernel_atax (m, n,
+  kernel_atax (
 	       A,
 	       x,
 	       y,

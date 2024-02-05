@@ -1,7 +1,7 @@
 #include "gesummv.h"
 
 
-void kernel_gesummv(int n,
+void kernel_gesummv(
 		    t_ap_fixed alpha,
 		    t_ap_fixed beta,
 		    t_ap_fixed A[ 90 + 0][90 + 0],
@@ -11,6 +11,8 @@ void kernel_gesummv(int n,
 		    t_ap_fixed y[ 90 + 0])
 {
   #pragma HLS top name=kernel_gesummv
+
+    const int n = 90;
 
   int i, j;
 

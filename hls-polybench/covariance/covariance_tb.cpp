@@ -56,7 +56,7 @@ int main(int argc, char** argv)
   init_array (m, n, &float_n, data);
 
 
-  kernel_covariance (m, n, float_n,
+  kernel_covariance ( float_n,
 		     data,
 		     cov,
 		     mean);

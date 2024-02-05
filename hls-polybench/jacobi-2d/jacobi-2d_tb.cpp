@@ -53,7 +53,7 @@ int main(int argc, char** argv)
   init_array (n, A, B);
 
 
-  kernel_jacobi_2d(tsteps, n, A, B);
+  kernel_jacobi_2d( A, B);
 
 
   print_array(n, A);

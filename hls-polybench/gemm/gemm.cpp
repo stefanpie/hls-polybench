@@ -1,7 +1,7 @@
 #include "gemm.h"
 
 
-void kernel_gemm(int ni, int nj, int nk,
+void kernel_gemm(  
 		 t_ap_fixed alpha,
 		 t_ap_fixed beta,
 		 t_ap_fixed C[ 60 + 0][70 + 0],
@@ -9,6 +9,10 @@ void kernel_gemm(int ni, int nj, int nk,
 		 t_ap_fixed B[ 80 + 0][70 + 0])
 {
   #pragma HLS top name=kernel_gemm
+
+    const int ni = 60;
+    const int nj = 70;
+    const int nk = 80;
 
   int i, j, k;
   for (i = 0; i < ni; i++) {

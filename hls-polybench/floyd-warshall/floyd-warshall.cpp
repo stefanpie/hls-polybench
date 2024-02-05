@@ -1,8 +1,10 @@
 #include "floyd-warshall.h"
-void kernel_floyd_warshall(int n,
+void kernel_floyd_warshall(
 			   int path[ 180 + 0][180 + 0])
 {
   #pragma HLS top name=kernel_floyd_warshall
+
+    const int n = 180;
 
   int i, j, k;
 

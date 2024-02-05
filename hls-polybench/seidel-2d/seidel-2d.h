@@ -5,7 +5,7 @@
 typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
-void kernel_seidel_2d(int tsteps,
-		      int n,
+void kernel_seidel_2d(
+		      
 		      t_ap_fixed A[ 120 + 0][120 + 0]);
 }

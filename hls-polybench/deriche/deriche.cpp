@@ -1,12 +1,15 @@
 #include "deriche.h"
 
 
-void kernel_deriche(int w, int h, t_ap_fixed alpha,
+void kernel_deriche(  t_ap_fixed alpha,
        t_ap_fixed imgIn[ 192 + 0][128 + 0],
        t_ap_fixed imgOut[ 192 + 0][128 + 0],
        t_ap_fixed y1[ 192 + 0][128 + 0],
        t_ap_fixed y2[ 192 + 0][128 + 0]) {
   #pragma HLS top name=kernel_deriche
+
+    const int w = 192;
+    const int h = 128;
 
     int i,j;
     t_ap_fixed xm1, tm1, ym1, ym2;

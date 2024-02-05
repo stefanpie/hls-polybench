@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 	      y);
 
 
-  kernel_ludcmp (n,
+  kernel_ludcmp (
 		 A,
 		 b,
 		 x,

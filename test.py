@@ -10,9 +10,18 @@ import joblib
 import numpy as np
 
 
-def hls_synth_benchmark(benchmark_directory: Path) -> int:
-    temp_dir = tempfile.TemporaryDirectory()
-    temp_dir_path = Path(temp_dir.name)
+def hls_synth_benchmark(
+    benchmark_directory: Path, temp_dir_overide: Path | None = None
+) -> int:
+    benchmark_name = benchmark_directory.stem
+
+    if temp_dir_overide is None:
+        temp_dir = tempfile.TemporaryDirectory()
+        temp_dir_path = Path(temp_dir.name)
+    else:
+        temp_dir_path = temp_dir_overide / benchmark_name
+        temp_dir_path.mkdir(exist_ok=True, parents=True)
+
     benchmark_name = benchmark_directory.stem
     benchmark_name_c = benchmark_name.replace("-", "_")
 
@@ -20,7 +29,7 @@ def hls_synth_benchmark(benchmark_directory: Path) -> int:
     for file in all_files:
         shutil.copy(file, temp_dir_path)
 
-    print(f"Running HLS Synthesis : {benchmark_name} : {temp_dir}")
+    print(f"Running HLS Synthesis : {benchmark_name} : {temp_dir_path}")
 
     tcl_script = temp_dir_path / "build.tcl"
     tcl_script_txt = ""
@@ -38,11 +47,23 @@ def hls_synth_benchmark(benchmark_directory: Path) -> int:
 
     p = subprocess.run(
         ["vitis_hls", "-f", tcl_script.resolve()],
-        cwd=temp_dir.name,
+        cwd=temp_dir_path,
         text=True,
         capture_output=True,
     )
     print(f"{benchmark_name}: {p.returncode}")
+
+    if p.returncode == 0:
+        csynth_rpt_fp = (
+            temp_dir_path
+            / f"test_proj_{benchmark_name}"
+            / "solution1"
+            / "syn"
+            / "report"
+            / "csynth.rpt"
+        )
+        shutil.copy(csynth_rpt_fp, temp_dir_path / "csynth.rpt")
+
     return p.returncode
 
 
@@ -254,9 +275,13 @@ def main(args):
     if output_dir.exists():
         shutil.rmtree(output_dir)
 
-    temp_dir_overide = Path("./test_temp")
-    if temp_dir_overide.exists():
-        shutil.rmtree(temp_dir_overide)
+    temp_dir_compile = Path("./test_temp_compile")
+    if temp_dir_compile.exists():
+        shutil.rmtree(temp_dir_compile)
+
+    temp_dir_synth = Path("./test_temp_synth")
+    if temp_dir_synth.exists():
+        shutil.rmtree(temp_dir_synth)
 
     benchmarks_to_skip = [
         "deriche",
@@ -271,18 +296,20 @@ def main(args):
         if benchmark.stem not in benchmarks_to_skip
     ]
 
-    # return_data_hls = joblib.Parallel(n_jobs=n_jobs, backend="multiprocessing")(
-    #     joblib.delayed(hls_synth_benchmark)(benchmark)
-    #     for benchmark in benchmarks_to_test
-    # )
-    # return_codes_hls_synthesis = return_data_hls
-    # for return_code, benchmark in zip(return_codes_hls_synthesis, benchmarks_to_test):
-    #     if return_code != 0:
-    #         print(f"Failed to build benchmark {benchmark.name}")
+    ### HLS Synthesis ###
+    return_data_hls = joblib.Parallel(n_jobs=n_jobs, backend="multiprocessing")(
+        joblib.delayed(hls_synth_benchmark)(benchmark, temp_dir_overide=temp_dir_synth)
+        for benchmark in benchmarks_to_test
+    )
+    return_codes_hls_synthesis = return_data_hls
+    for return_code, benchmark in zip(return_codes_hls_synthesis, benchmarks_to_test):
+        if return_code != 0:
+            print(f"Failed to synthesize benchmark {benchmark.name}")
 
+    ### HLS Compile and Run ###
     return_data = joblib.Parallel(n_jobs=n_jobs, backend="multiprocessing")(
         joblib.delayed(compile_benchmark)(
-            benchmark, error_dir, output_dir, temp_dir_overide=temp_dir_overide
+            benchmark, error_dir, output_dir, temp_dir_overide=temp_dir_compile
         )
         for benchmark in benchmarks_to_test
     )
