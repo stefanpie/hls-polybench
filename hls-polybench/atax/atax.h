@@ -1,13 +1,11 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
-typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_atax( 
-		 t_ap_fixed A[ 116 + 0][124 + 0],
-		 t_ap_fixed x[ 124 + 0],
-		 t_ap_fixed y[ 124 + 0],
-		 t_ap_fixed tmp[ 116 + 0]);
+		 double A[ 390 + 0][410 + 0],
+		 double x[ 410 + 0],
+		 double y[ 410 + 0],
+		 double tmp[ 390 + 0]);
 }

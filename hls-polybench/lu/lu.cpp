@@ -2,11 +2,11 @@
 
 
 void kernel_lu(
-	       t_ap_fixed A[ 120 + 0][120 + 0])
+	       double A[ 400 + 0][400 + 0])
 {
   #pragma HLS top name=kernel_lu
 
-    const int n = 120;
+    const int n = 400;
 
   int i, j, k;
 

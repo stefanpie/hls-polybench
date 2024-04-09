@@ -6,36 +6,31 @@
 #include "gemm.h"
 
 
-t_ap_fixed C[ 60 + 0][70 + 0];
-t_ap_fixed A[ 60 + 0][80 + 0];
-t_ap_fixed B[ 80 + 0][70 + 0];
-
-
 void init_array(int ni, int nj, int nk,
-		t_ap_fixed *alpha,
-		t_ap_fixed *beta,
-		t_ap_fixed C[ 60 + 0][70 + 0],
-		t_ap_fixed A[ 60 + 0][80 + 0],
-		t_ap_fixed B[ 80 + 0][70 + 0])
+		double *alpha,
+		double *beta,
+		double C[ 200 + 0][220 + 0],
+		double A[ 200 + 0][240 + 0],
+		double B[ 240 + 0][220 + 0])
 {
   int i, j;
 
-  *alpha = (t_ap_fixed(1.5));
-  *beta = (t_ap_fixed(1.2));
+  *alpha = 1.5;
+  *beta = 1.2;
   for (i = 0; i < ni; i++)
     for (j = 0; j < nj; j++)
-      C[i][j] = (t_ap_fixed) ((i*j+1) % ni) / ni;
+      C[i][j] = (double) ((i*j+1) % ni) / ni;
   for (i = 0; i < ni; i++)
     for (j = 0; j < nk; j++)
-      A[i][j] = (t_ap_fixed) (i*(j+1) % nk) / nk;
+      A[i][j] = (double) (i*(j+1) % nk) / nk;
   for (i = 0; i < nk; i++)
     for (j = 0; j < nj; j++)
-      B[i][j] = (t_ap_fixed) (i*(j+2) % nj) / nj;
+      B[i][j] = (double) (i*(j+2) % nj) / nj;
 }
 
 
 void print_array(int ni, int nj,
-		 t_ap_fixed C[ 60 + 0][70 + 0])
+		 double C[ 200 + 0][220 + 0])
 {
   int i, j;
 
@@ -44,7 +39,7 @@ void print_array(int ni, int nj,
   for (i = 0; i < ni; i++)
     for (j = 0; j < nj; j++) {
 	if ((i * ni + j) % 20 == 0) fprintf (stderr, "\n");
-	fprintf (stderr, "%0.6lf ", (float)C[i][j]);
+	fprintf (stderr, "%0.6lf ", C[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "C");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -54,15 +49,18 @@ void print_array(int ni, int nj,
 int main(int argc, char** argv)
 {
 
-  int ni = 60;
-  int nj = 70;
-  int nk = 80;
+  int ni = 200;
+  int nj = 220;
+  int nk = 240;
 
 
-  t_ap_fixed alpha;
-  t_ap_fixed beta;
-  
-  
+  double alpha;
+  double beta;
+  double C[ 200 + 0][220 + 0];
+  double A[ 200 + 0][240 + 0];
+  double B[ 240 + 0][220 + 0];
+
+
   init_array (ni, nj, nk, &alpha, &beta,
 	      C,
 	      A,

@@ -6,33 +6,26 @@
 #include "bicg.h"
 
 
-t_ap_fixed A[ 124 + 0][116 + 0];
-t_ap_fixed s[ 116 + 0];
-t_ap_fixed q[ 124 + 0];
-t_ap_fixed p[ 116 + 0];
-t_ap_fixed r[ 124 + 0];
-
-
 void init_array (int m, int n,
-		 t_ap_fixed A[ 124 + 0][116 + 0],
-		 t_ap_fixed r[ 124 + 0],
-		 t_ap_fixed p[ 116 + 0])
+		 double A[ 410 + 0][390 + 0],
+		 double r[ 410 + 0],
+		 double p[ 390 + 0])
 {
   int i, j;
 
   for (i = 0; i < m; i++)
-    p[i] = (t_ap_fixed)(i % m) / m;
+    p[i] = (double)(i % m) / m;
   for (i = 0; i < n; i++) {
-    r[i] = (t_ap_fixed)(i % n) / n;
+    r[i] = (double)(i % n) / n;
     for (j = 0; j < m; j++)
-      A[i][j] = (t_ap_fixed) (i*(j+1) % n)/n;
+      A[i][j] = (double) (i*(j+1) % n)/n;
   }
 }
 
 
 void print_array(int m, int n,
-		 t_ap_fixed s[ 116 + 0],
-		 t_ap_fixed q[ 124 + 0])
+		 double s[ 390 + 0],
+		 double q[ 410 + 0])
 
 {
   int i;
@@ -41,13 +34,13 @@ void print_array(int m, int n,
   fprintf(stderr, "begin dump: %s", "s");
   for (i = 0; i < m; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.6lf ", (float)s[i]);
+    fprintf (stderr, "%0.6lf ", s[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "s");
   fprintf(stderr, "begin dump: %s", "q");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.6lf ", (float)q[i]);
+    fprintf (stderr, "%0.6lf ", q[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "q");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -57,8 +50,15 @@ void print_array(int m, int n,
 int main(int argc, char** argv)
 {
 
-  int n = 124;
-  int m = 116;
+  int n = 410;
+  int m = 390;
+
+
+   double A[ 410 + 0][390 + 0];
+   double s[ 390 + 0];
+   double q[ 410 + 0];
+   double p[ 390 + 0];
+   double r[ 410 + 0];
 
 
   init_array (m, n,

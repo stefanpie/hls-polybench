@@ -2,21 +2,21 @@
 
 
 void kernel_gemver(
-		   t_ap_fixed alpha,
-		   t_ap_fixed beta,
-		   t_ap_fixed A[ 120 + 0][120 + 0],
-		   t_ap_fixed u1[ 120 + 0],
-		   t_ap_fixed v1[ 120 + 0],
-		   t_ap_fixed u2[ 120 + 0],
-		   t_ap_fixed v2[ 120 + 0],
-		   t_ap_fixed w[ 120 + 0],
-		   t_ap_fixed x[ 120 + 0],
-		   t_ap_fixed y[ 120 + 0],
-		   t_ap_fixed z[ 120 + 0])
+		   double alpha,
+		   double beta,
+		   double A[ 400 + 0][400 + 0],
+		   double u1[ 400 + 0],
+		   double v1[ 400 + 0],
+		   double u2[ 400 + 0],
+		   double v2[ 400 + 0],
+		   double w[ 400 + 0],
+		   double x[ 400 + 0],
+		   double y[ 400 + 0],
+		   double z[ 400 + 0])
 {
   #pragma HLS top name=kernel_gemver
 
-    const int n = 120;
+    const int n = 400;
 
   int i, j;
 

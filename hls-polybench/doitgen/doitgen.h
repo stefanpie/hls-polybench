@@ -1,12 +1,10 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
-typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_doitgen(  
-		    t_ap_fixed A[ 25 + 0][20 + 0][30 + 0],
-		    t_ap_fixed C4[ 30 + 0][30 + 0],
-		    t_ap_fixed sum[ 30 + 0]);
+		    double A[ 50 + 0][40 + 0][60 + 0],
+		    double C4[ 60 + 0][60 + 0],
+		    double sum[ 60 + 0]);
 }

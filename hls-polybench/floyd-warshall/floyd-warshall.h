@@ -1,9 +1,8 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
 
 extern "C" {
 void kernel_floyd_warshall(
-			   int path[ 180 + 0][180 + 0]);
+			   int path[ 500 + 0][500 + 0]);
 }

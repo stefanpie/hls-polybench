@@ -6,42 +6,35 @@
 #include "2mm.h"
 
 
-t_ap_fixed tmp[ 40 + 0][50 + 0];
-t_ap_fixed A[ 40 + 0][70 + 0];
-t_ap_fixed B[ 70 + 0][50 + 0];
-t_ap_fixed C[ 50 + 0][80 + 0];
-t_ap_fixed D[ 40 + 0][80 + 0];
-
-
 void init_array(int ni, int nj, int nk, int nl,
-		t_ap_fixed *alpha,
-		t_ap_fixed *beta,
-		t_ap_fixed A[ 40 + 0][70 + 0],
-		t_ap_fixed B[ 70 + 0][50 + 0],
-		t_ap_fixed C[ 50 + 0][80 + 0],
-		t_ap_fixed D[ 40 + 0][80 + 0])
+		double *alpha,
+		double *beta,
+		double A[ 180 + 0][210 + 0],
+		double B[ 210 + 0][190 + 0],
+		double C[ 190 + 0][220 + 0],
+		double D[ 180 + 0][220 + 0])
 {
   int i, j;
 
-  *alpha = (t_ap_fixed(1.5));
-  *beta = (t_ap_fixed(1.2));
+  *alpha = 1.5;
+  *beta = 1.2;
   for (i = 0; i < ni; i++)
     for (j = 0; j < nk; j++)
-      A[i][j] = (t_ap_fixed) ((i*j+1) % ni) / ni;
+      A[i][j] = (double) ((i*j+1) % ni) / ni;
   for (i = 0; i < nk; i++)
     for (j = 0; j < nj; j++)
-      B[i][j] = (t_ap_fixed) (i*(j+1) % nj) / nj;
+      B[i][j] = (double) (i*(j+1) % nj) / nj;
   for (i = 0; i < nj; i++)
     for (j = 0; j < nl; j++)
-      C[i][j] = (t_ap_fixed) ((i*(j+3)+1) % nl) / nl;
+      C[i][j] = (double) ((i*(j+3)+1) % nl) / nl;
   for (i = 0; i < ni; i++)
     for (j = 0; j < nl; j++)
-      D[i][j] = (t_ap_fixed) (i*(j+2) % nk) / nk;
+      D[i][j] = (double) (i*(j+2) % nk) / nk;
 }
 
 
 void print_array(int ni, int nl,
-		 t_ap_fixed D[ 40 + 0][80 + 0])
+		 double D[ 180 + 0][220 + 0])
 {
   int i, j;
 
@@ -50,7 +43,7 @@ void print_array(int ni, int nl,
   for (i = 0; i < ni; i++)
     for (j = 0; j < nl; j++) {
 	if ((i * ni + j) % 20 == 0) fprintf (stderr, "\n");
-	fprintf (stderr, "%0.6lf ", (float)D[i][j]);
+	fprintf (stderr, "%0.6lf ", D[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "D");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -60,16 +53,21 @@ void print_array(int ni, int nl,
 int main(int argc, char** argv)
 {
 
-  int ni = 40;
-  int nj = 50;
-  int nk = 70;
-  int nl = 80;
+  int ni = 180;
+  int nj = 190;
+  int nk = 210;
+  int nl = 220;
 
 
-  t_ap_fixed alpha;
-  t_ap_fixed beta;
-  
-  
+  double alpha;
+  double beta;
+  double tmp[ 180 + 0][190 + 0];
+  double A[ 180 + 0][210 + 0];
+  double B[ 210 + 0][190 + 0];
+  double C[ 190 + 0][220 + 0];
+  double D[ 180 + 0][220 + 0];
+
+
   init_array (ni, nj, nk, nl, &alpha, &beta,
 	      A,
 	      B,

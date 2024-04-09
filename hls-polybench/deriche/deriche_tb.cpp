@@ -6,29 +6,23 @@
 #include "deriche.h"
 
 
-t_ap_fixed imgIn[ 192 + 0][128 + 0];
-t_ap_fixed imgOut[ 192 + 0][128 + 0];
-t_ap_fixed y1[ 192 + 0][128 + 0];
-t_ap_fixed y2[ 192 + 0][128 + 0];
-
-
-void init_array (int w, int h, t_ap_fixed* alpha,
-		 t_ap_fixed imgIn[ 192 + 0][128 + 0],
-		 t_ap_fixed imgOut[ 192 + 0][128 + 0])
+void init_array (int w, int h, float* alpha,
+		 float imgIn[ 720 + 0][480 + 0],
+		 float imgOut[ 720 + 0][480 + 0])
 {
   int i, j;
 
-  *alpha=(t_ap_fixed(0.25));
+  *alpha=0.25;
 
 
   for (i = 0; i < w; i++)
      for (j = 0; j < h; j++)
-	imgIn[i][j] = (t_ap_fixed) ((313*i+991*j)%65536) / (t_ap_fixed(65535.0f));
+	imgIn[i][j] = (float) ((313*i+991*j)%65536) / 65535.0f;
 }
 
 
 void print_array(int w, int h,
-		 t_ap_fixed imgOut[ 192 + 0][128 + 0])
+		 float imgOut[ 720 + 0][480 + 0])
 
 {
   int i, j;
@@ -38,7 +32,7 @@ void print_array(int w, int h,
   for (i = 0; i < w; i++)
     for (j = 0; j < h; j++) {
       if ((i * h + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.6f ", (float)imgOut[i][j]);
+      fprintf(stderr, "%0.6f ", imgOut[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "imgOut");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -48,13 +42,17 @@ void print_array(int w, int h,
 int main(int argc, char** argv)
 {
 
-  int w = 192;
-  int h = 128;
+  int w = 720;
+  int h = 480;
 
 
-  t_ap_fixed alpha;
-   
-   
+  float alpha;
+   float imgIn[ 720 + 0][480 + 0];
+   float imgOut[ 720 + 0][480 + 0];
+   float y1[ 720 + 0][480 + 0];
+   float y2[ 720 + 0][480 + 0];
+
+
   init_array (w, h, &alpha, imgIn, imgOut);
 
 

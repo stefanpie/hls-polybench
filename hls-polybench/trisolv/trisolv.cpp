@@ -2,13 +2,13 @@
 
 
 void kernel_trisolv(
-		    t_ap_fixed L[ 120 + 0][120 + 0],
-		    t_ap_fixed x[ 120 + 0],
-		    t_ap_fixed b[ 120 + 0])
+		    double L[ 400 + 0][400 + 0],
+		    double x[ 400 + 0],
+		    double b[ 400 + 0])
 {
   #pragma HLS top name=kernel_trisolv
 
-    const int n = 120;
+    const int n = 400;
 
   int i, j;
 

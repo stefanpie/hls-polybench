@@ -6,27 +6,23 @@
 #include "jacobi-2d.h"
 
 
-t_ap_fixed A[ 90 + 0][90 + 0];
-t_ap_fixed B[ 90 + 0][90 + 0];
-
-
 void init_array (int n,
-		 t_ap_fixed A[ 90 + 0][90 + 0],
-		 t_ap_fixed B[ 90 + 0][90 + 0])
+		 double A[ 250 + 0][250 + 0],
+		 double B[ 250 + 0][250 + 0])
 {
   int i, j;
 
   for (i = 0; i < n; i++)
     for (j = 0; j < n; j++)
       {
-	A[i][j] = ((t_ap_fixed) i*(j+2) + 2) / n;
-	B[i][j] = ((t_ap_fixed) i*(j+3) + 3) / n;
+	A[i][j] = ((double) i*(j+2) + 2) / n;
+	B[i][j] = ((double) i*(j+3) + 3) / n;
       }
 }
 
 
 void print_array(int n,
-		 t_ap_fixed A[ 90 + 0][90 + 0])
+		 double A[ 250 + 0][250 + 0])
 
 {
   int i, j;
@@ -36,7 +32,7 @@ void print_array(int n,
   for (i = 0; i < n; i++)
     for (j = 0; j < n; j++) {
       if ((i * n + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.6lf ", (float)A[i][j]);
+      fprintf(stderr, "%0.6lf ", A[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "A");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -46,8 +42,12 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 90;
-  int tsteps = 40;
+  int n = 250;
+  int tsteps = 100;
+
+
+   double A[ 250 + 0][250 + 0];
+   double B[ 250 + 0][250 + 0];
 
 
   init_array (n, A, B);

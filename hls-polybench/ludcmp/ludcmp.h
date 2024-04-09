@@ -1,13 +1,11 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
-typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_ludcmp(
-		   t_ap_fixed A[ 120 + 0][120 + 0],
-		   t_ap_fixed b[ 120 + 0],
-		   t_ap_fixed x[ 120 + 0],
-		   t_ap_fixed y[ 120 + 0]);
+		   double A[ 400 + 0][400 + 0],
+		   double b[ 400 + 0],
+		   double x[ 400 + 0],
+		   double y[ 400 + 0]);
 }

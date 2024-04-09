@@ -1,9 +1,8 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
 
 extern "C" {
-void kernel_nussinov( char seq[ 180 + 0],
-			   int table[ 180 + 0][180 + 0]);
+void kernel_nussinov( char seq[ 500 + 0],
+			   int table[ 500 + 0][500 + 0]);
 }

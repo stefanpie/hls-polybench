@@ -6,27 +6,22 @@
 #include "covariance.h"
 
 
-t_ap_fixed data[ 100 + 0][80 + 0];
-t_ap_fixed cov[ 80 + 0][80 + 0];
-t_ap_fixed mean[ 80 + 0];
-
-
 void init_array (int m, int n,
-		 t_ap_fixed *float_n,
-		 t_ap_fixed data[ 100 + 0][80 + 0])
+		 double *float_n,
+		 double data[ 260 + 0][240 + 0])
 {
   int i, j;
 
-  *float_n = (t_ap_fixed)n;
+  *float_n = (double)n;
 
-  for (i = 0; i < 100; i++)
-    for (j = 0; j < 80; j++)
-      data[i][j] = t_ap_fixed(i*j) / t_ap_fixed(80.0);
+  for (i = 0; i < 260; i++)
+    for (j = 0; j < 240; j++)
+      data[i][j] = ((double) i*j) / 240;
 }
 
 
 void print_array(int m,
-		 t_ap_fixed cov[ 80 + 0][80 + 0])
+		 double cov[ 240 + 0][240 + 0])
 
 {
   int i, j;
@@ -36,7 +31,7 @@ void print_array(int m,
   for (i = 0; i < m; i++)
     for (j = 0; j < m; j++) {
       if ((i * m + j) % 20 == 0) fprintf (stderr, "\n");
-      fprintf (stderr, "%0.6lf ", (float)cov[i][j]);
+      fprintf (stderr, "%0.6lf ", cov[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "cov");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -46,13 +41,16 @@ void print_array(int m,
 int main(int argc, char** argv)
 {
 
-  int n = 100;
-  int m = 80;
+  int n = 260;
+  int m = 240;
 
 
-  t_ap_fixed float_n;
-  
-  
+  double float_n;
+  double data[ 260 + 0][240 + 0];
+  double cov[ 240 + 0][240 + 0];
+  double mean[ 240 + 0];
+
+
   init_array (m, n, &float_n, data);
 
 

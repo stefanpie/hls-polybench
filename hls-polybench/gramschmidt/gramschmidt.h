@@ -1,12 +1,10 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
-typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_gramschmidt( 
-			t_ap_fixed A[ 60 + 0][80 + 0],
-			t_ap_fixed R[ 80 + 0][80 + 0],
-			t_ap_fixed Q[ 60 + 0][80 + 0]);
+			double A[ 200 + 0][240 + 0],
+			double R[ 240 + 0][240 + 0],
+			double Q[ 200 + 0][240 + 0]);
 }

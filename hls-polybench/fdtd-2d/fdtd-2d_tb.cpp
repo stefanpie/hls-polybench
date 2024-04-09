@@ -6,39 +6,33 @@
 #include "fdtd-2d.h"
 
 
-t_ap_fixed ex[ 60 + 0][80 + 0];
-t_ap_fixed ey[ 60 + 0][80 + 0];
-t_ap_fixed hz[ 60 + 0][80 + 0];
-t_ap_fixed _fict_[ 40 + 0];
-
-
 void init_array (int tmax,
 		 int nx,
 		 int ny,
-		 t_ap_fixed ex[ 60 + 0][80 + 0],
-		 t_ap_fixed ey[ 60 + 0][80 + 0],
-		 t_ap_fixed hz[ 60 + 0][80 + 0],
-		 t_ap_fixed _fict_[ 40 + 0])
+		 double ex[ 200 + 0][240 + 0],
+		 double ey[ 200 + 0][240 + 0],
+		 double hz[ 200 + 0][240 + 0],
+		 double _fict_[ 100 + 0])
 {
   int i, j;
 
   for (i = 0; i < tmax; i++)
-    _fict_[i] = (t_ap_fixed) i;
+    _fict_[i] = (double) i;
   for (i = 0; i < nx; i++)
     for (j = 0; j < ny; j++)
       {
-	ex[i][j] = ((t_ap_fixed) i*(j+1)) / nx;
-	ey[i][j] = ((t_ap_fixed) i*(j+2)) / ny;
-	hz[i][j] = ((t_ap_fixed) i*(j+3)) / nx;
+	ex[i][j] = ((double) i*(j+1)) / nx;
+	ey[i][j] = ((double) i*(j+2)) / ny;
+	hz[i][j] = ((double) i*(j+3)) / nx;
       }
 }
 
 
 void print_array(int nx,
 		 int ny,
-		 t_ap_fixed ex[ 60 + 0][80 + 0],
-		 t_ap_fixed ey[ 60 + 0][80 + 0],
-		 t_ap_fixed hz[ 60 + 0][80 + 0])
+		 double ex[ 200 + 0][240 + 0],
+		 double ey[ 200 + 0][240 + 0],
+		 double hz[ 200 + 0][240 + 0])
 {
   int i, j;
 
@@ -47,7 +41,7 @@ void print_array(int nx,
   for (i = 0; i < nx; i++)
     for (j = 0; j < ny; j++) {
       if ((i * nx + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.6lf ", (float)ex[i][j]);
+      fprintf(stderr, "%0.6lf ", ex[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "ex");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -56,7 +50,7 @@ void print_array(int nx,
   for (i = 0; i < nx; i++)
     for (j = 0; j < ny; j++) {
       if ((i * nx + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.6lf ", (float)ey[i][j]);
+      fprintf(stderr, "%0.6lf ", ey[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "ey");
 
@@ -64,7 +58,7 @@ void print_array(int nx,
   for (i = 0; i < nx; i++)
     for (j = 0; j < ny; j++) {
       if ((i * nx + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf(stderr, "%0.6lf ", (float)hz[i][j]);
+      fprintf(stderr, "%0.6lf ", hz[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "hz");
 }
@@ -73,9 +67,15 @@ void print_array(int nx,
 int main(int argc, char** argv)
 {
 
-  int tmax = 40;
-  int nx = 60;
-  int ny = 80;
+  int tmax = 100;
+  int nx = 200;
+  int ny = 240;
+
+
+  double ex[ 200 + 0][240 + 0];
+  double ey[ 200 + 0][240 + 0];
+  double hz[ 200 + 0][240 + 0];
+  double _fict_[ 100 + 0];
 
 
   init_array (tmax, nx, ny,

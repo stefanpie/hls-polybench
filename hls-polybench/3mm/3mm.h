@@ -1,16 +1,14 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
-typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_3mm(    
-		t_ap_fixed E[ 40 + 0][50 + 0],
-		t_ap_fixed A[ 40 + 0][60 + 0],
-		t_ap_fixed B[ 60 + 0][50 + 0],
-		t_ap_fixed F[ 50 + 0][70 + 0],
-		t_ap_fixed C[ 50 + 0][80 + 0],
-		t_ap_fixed D[ 80 + 0][70 + 0],
-		t_ap_fixed G[ 40 + 0][70 + 0]);
+		double E[ 180 + 0][190 + 0],
+		double A[ 180 + 0][200 + 0],
+		double B[ 200 + 0][190 + 0],
+		double F[ 190 + 0][210 + 0],
+		double C[ 190 + 0][220 + 0],
+		double D[ 220 + 0][210 + 0],
+		double G[ 180 + 0][210 + 0]);
 }

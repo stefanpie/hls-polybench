@@ -1,15 +1,13 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
-typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_fdtd_2d(
 		    
 		    
-		    t_ap_fixed ex[ 60 + 0][80 + 0],
-		    t_ap_fixed ey[ 60 + 0][80 + 0],
-		    t_ap_fixed hz[ 60 + 0][80 + 0],
-		    t_ap_fixed _fict_[ 40 + 0]);
+		    double ex[ 200 + 0][240 + 0],
+		    double ey[ 200 + 0][240 + 0],
+		    double hz[ 200 + 0][240 + 0],
+		    double _fict_[ 100 + 0]);
 }

@@ -6,27 +6,21 @@
 #include "adi.h"
 
 
-t_ap_fixed u[ 60 + 0][60 + 0];
-t_ap_fixed v[ 60 + 0][60 + 0];
-t_ap_fixed p[ 60 + 0][60 + 0];
-t_ap_fixed q[ 60 + 0][60 + 0];
-
-
 void init_array (int n,
-		 t_ap_fixed u[ 60 + 0][60 + 0])
+		 double u[ 200 + 0][200 + 0])
 {
   int i, j;
 
   for (i = 0; i < n; i++)
     for (j = 0; j < n; j++)
       {
-	u[i][j] =  (t_ap_fixed)(i + n-j) / n;
+	u[i][j] =  (double)(i + n-j) / n;
       }
 }
 
 
 void print_array(int n,
-		 t_ap_fixed u[ 60 + 0][60 + 0])
+		 double u[ 200 + 0][200 + 0])
 
 {
   int i, j;
@@ -36,7 +30,7 @@ void print_array(int n,
   for (i = 0; i < n; i++)
     for (j = 0; j < n; j++) {
       if ((i * n + j) % 20 == 0) fprintf(stderr, "\n");
-      fprintf (stderr, "%0.6lf ", (float)u[i][j]);
+      fprintf (stderr, "%0.6lf ", u[i][j]);
     }
   fprintf(stderr, "\nend   dump: %s\n", "u");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -46,8 +40,14 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 60;
-  int tsteps = 40;
+  int n = 200;
+  int tsteps = 100;
+
+
+   double u[ 200 + 0][200 + 0];
+   double v[ 200 + 0][200 + 0];
+   double p[ 200 + 0][200 + 0];
+   double q[ 200 + 0][200 + 0];
 
 
   init_array (n, u);

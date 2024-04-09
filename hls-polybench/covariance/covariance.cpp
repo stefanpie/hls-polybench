@@ -2,21 +2,21 @@
 
 
 void kernel_covariance( 
-		       t_ap_fixed float_n,
-		       t_ap_fixed data[ 100 + 0][80 + 0],
-		       t_ap_fixed cov[ 80 + 0][80 + 0],
-		       t_ap_fixed mean[ 80 + 0])
+		       double float_n,
+		       double data[ 260 + 0][240 + 0],
+		       double cov[ 240 + 0][240 + 0],
+		       double mean[ 240 + 0])
 {
   #pragma HLS top name=kernel_covariance
 
-    const int n = 100;
-    const int m = 80;
+    const int n = 260;
+    const int m = 240;
 
   int i, j, k;
 
   for (j = 0; j < m; j++)
     {
-      mean[j] = (t_ap_fixed(0.0));
+      mean[j] = 0.0;
       for (i = 0; i < n; i++)
         mean[j] += data[i][j];
       mean[j] /= float_n;
@@ -29,10 +29,10 @@ void kernel_covariance(
   for (i = 0; i < m; i++)
     for (j = i; j < m; j++)
       {
-        cov[i][j] = (t_ap_fixed(0.0));
+        cov[i][j] = 0.0;
         for (k = 0; k < n; k++)
 	  cov[i][j] += data[k][i] * data[k][j];
-        cov[i][j] /= (float_n - (t_ap_fixed(1.0)));
+        cov[i][j] /= (float_n - 1.0);
         cov[j][i] = cov[i][j];
       }
 

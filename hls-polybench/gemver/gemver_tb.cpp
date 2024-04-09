@@ -6,55 +6,44 @@
 #include "gemver.h"
 
 
-t_ap_fixed A[ 120 + 0][120 + 0];
-t_ap_fixed u1[ 120 + 0];
-t_ap_fixed v1[ 120 + 0];
-t_ap_fixed u2[ 120 + 0];
-t_ap_fixed v2[ 120 + 0];
-t_ap_fixed w[ 120 + 0];
-t_ap_fixed x[ 120 + 0];
-t_ap_fixed y[ 120 + 0];
-t_ap_fixed z[ 120 + 0];
-
-
 void init_array (int n,
-		 t_ap_fixed *alpha,
-		 t_ap_fixed *beta,
-		 t_ap_fixed A[ 120 + 0][120 + 0],
-		 t_ap_fixed u1[ 120 + 0],
-		 t_ap_fixed v1[ 120 + 0],
-		 t_ap_fixed u2[ 120 + 0],
-		 t_ap_fixed v2[ 120 + 0],
-		 t_ap_fixed w[ 120 + 0],
-		 t_ap_fixed x[ 120 + 0],
-		 t_ap_fixed y[ 120 + 0],
-		 t_ap_fixed z[ 120 + 0])
+		 double *alpha,
+		 double *beta,
+		 double A[ 400 + 0][400 + 0],
+		 double u1[ 400 + 0],
+		 double v1[ 400 + 0],
+		 double u2[ 400 + 0],
+		 double v2[ 400 + 0],
+		 double w[ 400 + 0],
+		 double x[ 400 + 0],
+		 double y[ 400 + 0],
+		 double z[ 400 + 0])
 {
   int i, j;
 
-  *alpha = (t_ap_fixed(1.5));
-  *beta = (t_ap_fixed(1.2));
+  *alpha = 1.5;
+  *beta = 1.2;
 
-  t_ap_fixed fn = (t_ap_fixed)n;
+  double fn = (double)n;
 
   for (i = 0; i < n; i++)
     {
       u1[i] = i;
-      u2[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(2.0));
-      v1[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(4.0));
-      v2[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(6.0));
-      y[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(8.0));
-      z[i] = (t_ap_fixed(i+1)) / (fn)/(t_ap_fixed(9.0));
-      x[i] = (t_ap_fixed(0.0));
-      w[i] = (t_ap_fixed(0.0));
+      u2[i] = ((i+1)/fn)/2.0;
+      v1[i] = ((i+1)/fn)/4.0;
+      v2[i] = ((i+1)/fn)/6.0;
+      y[i] = ((i+1)/fn)/8.0;
+      z[i] = ((i+1)/fn)/9.0;
+      x[i] = 0.0;
+      w[i] = 0.0;
       for (j = 0; j < n; j++)
-        A[i][j] = (t_ap_fixed) ((t_ap_fixed(i*j % n)) / (t_ap_fixed(n)));
+        A[i][j] = (double) (i*j % n) / n;
     }
 }
 
 
 void print_array(int n,
-		 t_ap_fixed w[ 120 + 0])
+		 double w[ 400 + 0])
 {
   int i;
 
@@ -62,7 +51,7 @@ void print_array(int n,
   fprintf(stderr, "begin dump: %s", "w");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.6lf ", (float)w[i]);
+    fprintf (stderr, "%0.6lf ", w[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "w");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -72,13 +61,22 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 120;
+  int n = 400;
 
 
-  t_ap_fixed alpha;
-  t_ap_fixed beta;
-   
-   
+  double alpha;
+  double beta;
+   double A[ 400 + 0][400 + 0];
+   double u1[ 400 + 0];
+   double v1[ 400 + 0];
+   double u2[ 400 + 0];
+   double v2[ 400 + 0];
+   double w[ 400 + 0];
+   double x[ 400 + 0];
+   double y[ 400 + 0];
+   double z[ 400 + 0];
+
+
   init_array (n, &alpha, &beta,
 	      A,
 	      u1,

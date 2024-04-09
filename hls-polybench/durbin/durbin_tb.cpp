@@ -6,12 +6,8 @@
 #include "durbin.h"
 
 
-t_ap_fixed r[ 120 + 0];
-t_ap_fixed y[ 120 + 0];
-
-
 void init_array (int n,
-		 t_ap_fixed r[ 120 + 0])
+		 double r[ 400 + 0])
 {
   int i, j;
 
@@ -23,7 +19,7 @@ void init_array (int n,
 
 
 void print_array(int n,
-		 t_ap_fixed y[ 120 + 0])
+		 double y[ 400 + 0])
 
 {
   int i;
@@ -32,7 +28,7 @@ void print_array(int n,
   fprintf(stderr, "begin dump: %s", "y");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.6lf ", (float)y[i]);
+    fprintf (stderr, "%0.6lf ", y[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "y");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -42,7 +38,11 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 120;
+  int n = 400;
+
+
+   double r[ 400 + 0];
+   double y[ 400 + 0];
 
 
   init_array (n, r);

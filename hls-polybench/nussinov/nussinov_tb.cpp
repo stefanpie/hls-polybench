@@ -7,8 +7,8 @@
 
 
 void init_array (int n,
-                 char seq[ 180 + 0],
-		 int table[ 180 + 0][180 + 0])
+                 char seq[ 500 + 0],
+		 int table[ 500 + 0][500 + 0])
 {
   int i, j;
 
@@ -24,7 +24,7 @@ void init_array (int n,
 
 
 void print_array(int n,
-		 int table[ 180 + 0][180 + 0])
+		 int table[ 500 + 0][500 + 0])
 
 {
   int i, j;
@@ -47,11 +47,11 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 180;
+  int n = 500;
 
 
-   char seq[ 180 + 0];
-   int table[ 180 + 0][180 + 0];
+   char seq[ 500 + 0];
+   int table[ 500 + 0][500 + 0];
 
 
   init_array (n, seq, table);

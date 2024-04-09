@@ -264,7 +264,7 @@ def process_benchmark_c(c_fp: Path):
     remove_line(c_fp, "#include")
     trim_top_empty_lines(c_fp)
     # add_to_top(c_fp, '#include "ap_fixed.h"\n#include "hls_math.h"\n')
-    cast_decimal_to_ap_fixed(c_fp)
+    # cast_decimal_to_ap_fixed(c_fp)
 
 
 RE_ARRAY_DECL_MACRO = re.compile(r"POLYBENCH_\dD_ARRAY_DECL\((.*?)\)")
@@ -875,7 +875,7 @@ def main(args):
         shutil.copy(tb_data_original_fp, new_benchmark_dir)
 
         h_file = new_benchmark_dir / (benchmark_name + ".h")
-        process_benchmark_header(h_file)
+        # process_benchmark_header(h_file)
 
         input_c_file = new_benchmark_dir / (benchmark_name + ".c")
         output_c_file = new_benchmark_dir / (benchmark_name + ".preprocessed.c")
@@ -949,8 +949,9 @@ def main(args):
         new_h_fp = new_benchmark_dir / (benchmark_name + ".h")
         h_text = ""
         h_text += "#pragma once\n"
-        h_text += '#include "ap_fixed.h"\n'
-        h_text += '#include "hls_math.h"\n'
+        # h_text += '#include "ap_fixed.h"\n'
+        # h_text += '#include "hls_math.h"\n'
+        h_text += "#include <cmath>\n"
         h_text += "\n"
         typedef_line = extract_apfixed_typedef(
             new_benchmark_dir / (benchmark_name + ".cpp")
@@ -1014,11 +1015,11 @@ def main(args):
             "int main",
         )
 
-        cast_printf_ap_fixed_to_float(new_benchmark_dir / (benchmark_name + "_tb.cpp"))
+        # cast_printf_ap_fixed_to_float(new_benchmark_dir / (benchmark_name + "_tb.cpp"))
 
-        cast_decimal_to_ap_fixed_not_in_quotes(
-            new_benchmark_dir / (benchmark_name + "_tb.cpp")
-        )
+        # cast_decimal_to_ap_fixed_not_in_quotes(
+        #     new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        # )
 
         move_array_declaration_to_outer_scope(
             new_benchmark_dir / (benchmark_name + "_tb.cpp")
@@ -1045,6 +1046,14 @@ def main(args):
 
         remove_int_decls_from_kernel_declaration(
             new_benchmark_dir / (benchmark_name + ".h"), int_decls
+        )
+
+        # find the #include "<name>.h" line in the cpp file
+        # add a new line after that
+        replace_text_exact(
+            new_benchmark_dir / (benchmark_name + ".cpp"),
+            f'#include "{benchmark_name}.h"',
+            f'#include "{benchmark_name}.h"\n\n',
         )
 
         ### Special cases
@@ -1084,138 +1093,138 @@ def main(args):
                 new_benchmark_dir / (benchmark_name + "_tb.cpp"), "(*B)", "B"
             )
 
-        if benchmark_name == "gramschmidt":
-            # special case to add support for eps in gramschmidt calculation
-            # due to sqrt and fixed point quantizing to 0 sometimes
-            kernel_fp = new_benchmark_dir / (benchmark_name + ".cpp")
+        # if benchmark_name == "gramschmidt":
+        #     # special case to add support for eps in gramschmidt calculation
+        #     # due to sqrt and fixed point quantizing to 0 sometimes
+        #     kernel_fp = new_benchmark_dir / (benchmark_name + ".cpp")
 
-            add_new_lines_after_matching_line(
-                kernel_fp,
-                "t_ap_fixed nrm;",
-                [
-                    "  const t_ap_fixed eps = hls::nextafter(t_ap_fixed(0.0), t_ap_fixed(1.0));"
-                ],
-            )
-            replace_text_exact(
-                new_benchmark_dir / (benchmark_name + ".cpp"),
-                "R[k][k] = hls::sqrt(nrm);",
-                "R[k][k] = hls::sqrt(nrm);\n      if (R[k][k] == t_ap_fixed(0.0)) R[k][k] += eps;",
-            )
+        #     add_new_lines_after_matching_line(
+        #         kernel_fp,
+        #         "t_ap_fixed nrm;",
+        #         [
+        #             "  const t_ap_fixed eps = hls::nextafter(t_ap_fixed(0.0), t_ap_fixed(1.0));"
+        #         ],
+        #     )
+        #     replace_text_exact(
+        #         new_benchmark_dir / (benchmark_name + ".cpp"),
+        #         "R[k][k] = hls::sqrt(nrm);",
+        #         "R[k][k] = hls::sqrt(nrm);\n      if (R[k][k] == t_ap_fixed(0.0)) R[k][k] += eps;",
+        #     )
 
-            # TODO: fix other issues with large fixed point percision rnage and norm sum overflows
+        #     # TODO: fix other issues with large fixed point percision rnage and norm sum overflows
 
-        if benchmark_name == "atax":
-            # special case in atax to fix weird casting rules between int and ap_fixed based on int loop index variables
-            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
-            replace_text_exact(
-                tb_fp,
-                "x[i] = 1 + (i / fn);",
-                "x[i] = (t_ap_fixed(1.0)) + ( (t_ap_fixed(i)) / fn );",
-            )
-            replace_text_exact(
-                tb_fp,
-                "((i+j) % n) / (5*m)",
-                "(t_ap_fixed(((i+j) % n))) / (t_ap_fixed(5.0)*t_ap_fixed(m))",
-            )
+        # if benchmark_name == "atax":
+        #     # special case in atax to fix weird casting rules between int and ap_fixed based on int loop index variables
+        #     tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "x[i] = 1 + (i / fn);",
+        #         "x[i] = (t_ap_fixed(1.0)) + ( (t_ap_fixed(i)) / fn );",
+        #     )
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "((i+j) % n) / (5*m)",
+        #         "(t_ap_fixed(((i+j) % n))) / (t_ap_fixed(5.0)*t_ap_fixed(m))",
+        #     )
 
-        if benchmark_name == "gemver":
-            # special case in gemver to fix weird casting rules between int and ap_fixed based on int loop index variables
-            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
-            replace_text_exact(
-                tb_fp,
-                "((i+1)/fn)",
-                "(t_ap_fixed(i+1)) / (fn)",
-            )
-            replace_text_exact(
-                tb_fp,
-                "(i*j % n) / n",
-                "((t_ap_fixed(i*j % n)) / (t_ap_fixed(n)))",
-            )
+        # if benchmark_name == "gemver":
+        #     # special case in gemver to fix weird casting rules between int and ap_fixed based on int loop index variables
+        #     tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "((i+1)/fn)",
+        #         "(t_ap_fixed(i+1)) / (fn)",
+        #     )
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "(i*j % n) / n",
+        #         "((t_ap_fixed(i*j % n)) / (t_ap_fixed(n)))",
+        #     )
 
-        if benchmark_name == "gramschmidt":
-            # special case in gramschmidt to fix weird casting rules between int and ap_fixed based on int loop index variables
-            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
-            # (((t_ap_fixed) ((i*j) % m) / m )*100) + 10
-            replace_text_exact(
-                tb_fp,
-                "(((t_ap_fixed) ((i*j) % m) / m )*100) + 10",
-                "(( (t_ap_fixed(i*j % m)) / (t_ap_fixed(m)) ) * (t_ap_fixed(100.0)) ) + (t_ap_fixed(10.0))",
-            )
+        # if benchmark_name == "gramschmidt":
+        #     # special case in gramschmidt to fix weird casting rules between int and ap_fixed based on int loop index variables
+        #     tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        #     # (((t_ap_fixed) ((i*j) % m) / m )*100) + 10
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "(((t_ap_fixed) ((i*j) % m) / m )*100) + 10",
+        #         "(( (t_ap_fixed(i*j % m)) / (t_ap_fixed(m)) ) * (t_ap_fixed(100.0)) ) + (t_ap_fixed(10.0))",
+        #     )
 
-        if benchmark_name == "ludcmp":
-            # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
-            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
-            replace_text_exact(
-                tb_fp,
-                "x[i] = 0;",
-                "x[i] = t_ap_fixed(0.0);",
-            )
-            replace_text_exact(
-                tb_fp,
-                "y[i] = 0;",
-                "y[i] = t_ap_fixed(0.0);",
-            )
-            # b[i] = (i+1)/fn/(t_ap_fixed(2.0)) + 4;
-            replace_text_exact(
-                tb_fp,
-                "b[i] = (i+1)/fn/(t_ap_fixed(2.0)) + 4;",
-                "b[i] = ( (t_ap_fixed(i+1)) / (fn) ) / (t_ap_fixed(2.0)) + (t_ap_fixed(4.0));",
-            )
-            # A[i][j] = 0;
-            replace_text_exact(
-                tb_fp,
-                "A[i][j] = 0;",
-                "A[i][j] = t_ap_fixed(0.0);",
-            )
-            # A[i][i] = 1;
-            replace_text_exact(
-                tb_fp,
-                "A[i][i] = 1;",
-                "A[i][i] = t_ap_fixed(1.0);",
-            )
+        # if benchmark_name == "ludcmp":
+        #     # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
+        #     tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "x[i] = 0;",
+        #         "x[i] = t_ap_fixed(0.0);",
+        #     )
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "y[i] = 0;",
+        #         "y[i] = t_ap_fixed(0.0);",
+        #     )
+        #     # b[i] = (i+1)/fn/(t_ap_fixed(2.0)) + 4;
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "b[i] = (i+1)/fn/(t_ap_fixed(2.0)) + 4;",
+        #         "b[i] = ( (t_ap_fixed(i+1)) / (fn) ) / (t_ap_fixed(2.0)) + (t_ap_fixed(4.0));",
+        #     )
+        #     # A[i][j] = 0;
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "A[i][j] = 0;",
+        #         "A[i][j] = t_ap_fixed(0.0);",
+        #     )
+        #     # A[i][i] = 1;
+        #     replace_text_exact(
+        #         tb_fp,
+        #         "A[i][i] = 1;",
+        #         "A[i][i] = t_ap_fixed(1.0);",
+        #     )
 
-        if benchmark_name == "correlation":
-            # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
-            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        # if benchmark_name == "correlation":
+        #     # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
+        #     tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
 
-            RE_FLOAT_N = re.compile("\*float_n = \(t_ap_fixed\)(\d+);")
-            match = RE_FLOAT_N.search(tb_fp.read_text())
-            if match:
-                float_n = match.group(1)
-                replace_text_exact(
-                    tb_fp,
-                    f"*float_n = (t_ap_fixed){float_n};",
-                    f"*float_n = t_ap_fixed({float_n}.0);",
-                )
+        #     RE_FLOAT_N = re.compile("\*float_n = \(t_ap_fixed\)(\d+);")
+        #     match = RE_FLOAT_N.search(tb_fp.read_text())
+        #     if match:
+        #         float_n = match.group(1)
+        #         replace_text_exact(
+        #             tb_fp,
+        #             f"*float_n = (t_ap_fixed){float_n};",
+        #             f"*float_n = t_ap_fixed({float_n}.0);",
+        #         )
 
-            RE_LINE_TO_CHANGE = re.compile("\(t_ap_fixed\)\(i\*j\)/(\d+) \+ i;")
-            match = RE_LINE_TO_CHANGE.search(tb_fp.read_text())
-            if match:
-                n = match.group(1)
-                replace_text_exact(
-                    tb_fp,
-                    f"(t_ap_fixed)(i*j)/{n} + i;",
-                    f"(t_ap_fixed)(t_ap_fixed(i*j)/t_ap_fixed({n}.0)) + t_ap_fixed(i);",
-                )
+        #     RE_LINE_TO_CHANGE = re.compile("\(t_ap_fixed\)\(i\*j\)/(\d+) \+ i;")
+        #     match = RE_LINE_TO_CHANGE.search(tb_fp.read_text())
+        #     if match:
+        #         n = match.group(1)
+        #         replace_text_exact(
+        #             tb_fp,
+        #             f"(t_ap_fixed)(i*j)/{n} + i;",
+        #             f"(t_ap_fixed)(t_ap_fixed(i*j)/t_ap_fixed({n}.0)) + t_ap_fixed(i);",
+        #         )
 
-        if benchmark_name == "covariance":
-            # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
+        # if benchmark_name == "covariance":
+        #     # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables
 
-            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+        #     tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
 
-            # data[i][j] = ((t_ap_fixed) i*j) / 80;
-            RE_LINE_TO_CHANGE = re.compile(
-                "data\[i\]\[j\] = \(\(t_ap_fixed\) i\*j\) / (\d+);"
-            )
+        #     # data[i][j] = ((t_ap_fixed) i*j) / 80;
+        #     RE_LINE_TO_CHANGE = re.compile(
+        #         "data\[i\]\[j\] = \(\(t_ap_fixed\) i\*j\) / (\d+);"
+        #     )
 
-            match = RE_LINE_TO_CHANGE.search(tb_fp.read_text())
-            if match:
-                n = match.group(1)
-                replace_text_exact(
-                    tb_fp,
-                    f"data[i][j] = ((t_ap_fixed) i*j) / {n};",
-                    f"data[i][j] = t_ap_fixed(i*j) / t_ap_fixed({n}.0);",
-                )
+        #     match = RE_LINE_TO_CHANGE.search(tb_fp.read_text())
+        #     if match:
+        #         n = match.group(1)
+        #         replace_text_exact(
+        #             tb_fp,
+        #             f"data[i][j] = ((t_ap_fixed) i*j) / {n};",
+        #             f"data[i][j] = t_ap_fixed(i*j) / t_ap_fixed({n}.0);",
+        #         )
 
         fix_spacing(new_benchmark_dir / (benchmark_name + ".cpp"))
         fix_spacing(new_benchmark_dir / (benchmark_name + "_tb.cpp"))

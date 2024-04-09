@@ -2,15 +2,15 @@
 
 
 void kernel_mvt(
-		t_ap_fixed x1[ 120 + 0],
-		t_ap_fixed x2[ 120 + 0],
-		t_ap_fixed y_1[ 120 + 0],
-		t_ap_fixed y_2[ 120 + 0],
-		t_ap_fixed A[ 120 + 0][120 + 0])
+		double x1[ 400 + 0],
+		double x2[ 400 + 0],
+		double y_1[ 400 + 0],
+		double y_2[ 400 + 0],
+		double A[ 400 + 0][400 + 0])
 {
   #pragma HLS top name=kernel_mvt
 
-    const int n = 120;
+    const int n = 400;
 
   int i, j;
 

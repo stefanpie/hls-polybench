@@ -6,19 +6,15 @@
 #include "cholesky.h"
 
 
-t_ap_fixed B[ 120 + 0][120 + 0];
-t_ap_fixed A[ 120 + 0][120 + 0];
-
-
 void init_array(int n,
-		t_ap_fixed A[ 120 + 0][120 + 0])
+		double A[ 400 + 0][400 + 0])
 {
   int i, j;
 
   for (i = 0; i < n; i++)
     {
       for (j = 0; j <= i; j++)
-	A[i][j] = (t_ap_fixed)(-j % n) / n + 1;
+	A[i][j] = (double)(-j % n) / n + 1;
       for (j = i+1; j < n; j++) {
 	A[i][j] = 0;
       }
@@ -27,7 +23,7 @@ void init_array(int n,
 
 
   int r,s,t;
-   
+   double B[ 400 + 0][400 + 0];
   for (r = 0; r < n; ++r)
     for (s = 0; s < n; ++s)
       B[r][s] = 0;
@@ -43,7 +39,7 @@ void init_array(int n,
 
 
 void print_array(int n,
-		 t_ap_fixed A[ 120 + 0][120 + 0])
+		 double A[ 400 + 0][400 + 0])
 
 {
   int i, j;
@@ -53,7 +49,7 @@ void print_array(int n,
   for (i = 0; i < n; i++)
     for (j = 0; j <= i; j++) {
     if ((i * n + j) % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.6lf ", (float)A[i][j]);
+    fprintf (stderr, "%0.6lf ", A[i][j]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "A");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -63,7 +59,10 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 120;
+  int n = 400;
+
+
+   double A[ 400 + 0][400 + 0];
 
 
   init_array (n, A);

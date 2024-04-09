@@ -2,18 +2,18 @@
 
 
 void kernel_ludcmp(
-		   t_ap_fixed A[ 120 + 0][120 + 0],
-		   t_ap_fixed b[ 120 + 0],
-		   t_ap_fixed x[ 120 + 0],
-		   t_ap_fixed y[ 120 + 0])
+		   double A[ 400 + 0][400 + 0],
+		   double b[ 400 + 0],
+		   double x[ 400 + 0],
+		   double y[ 400 + 0])
 {
   #pragma HLS top name=kernel_ludcmp
 
-    const int n = 120;
+    const int n = 400;
 
   int i, j, k;
 
-  t_ap_fixed w;
+  double w;
 
   for (i = 0; i < n; i++) {
     for (j = 0; j <i; j++) {

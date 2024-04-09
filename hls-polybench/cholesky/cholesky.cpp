@@ -2,11 +2,11 @@
 
 
 void kernel_cholesky(
-		     t_ap_fixed A[ 120 + 0][120 + 0])
+		     double A[ 400 + 0][400 + 0])
 {
   #pragma HLS top name=kernel_cholesky
 
-    const int n = 120;
+    const int n = 400;
 
   int i, j, k;
 
@@ -23,7 +23,7 @@ void kernel_cholesky(
      for (k = 0; k < i; k++) {
         A[i][i] -= A[i][k] * A[i][k];
      }
-     A[i][i] = hls::sqrt(A[i][i]);
+     A[i][i] = sqrt(A[i][i]);
   }
 
 }

@@ -1,14 +1,12 @@
 #pragma once
-#include "ap_fixed.h"
-#include "hls_math.h"
+#include <cmath>
 
-typedef ap_fixed<32,16> t_ap_fixed;
 
 extern "C" {
 void kernel_bicg( 
-		 t_ap_fixed A[ 124 + 0][116 + 0],
-		 t_ap_fixed s[ 116 + 0],
-		 t_ap_fixed q[ 124 + 0],
-		 t_ap_fixed p[ 116 + 0],
-		 t_ap_fixed r[ 124 + 0]);
+		 double A[ 410 + 0][390 + 0],
+		 double s[ 390 + 0],
+		 double q[ 410 + 0],
+		 double p[ 390 + 0],
+		 double r[ 410 + 0]);
 }

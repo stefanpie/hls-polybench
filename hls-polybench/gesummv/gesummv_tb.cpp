@@ -6,37 +6,30 @@
 #include "gesummv.h"
 
 
-t_ap_fixed A[ 90 + 0][90 + 0];
-t_ap_fixed B[ 90 + 0][90 + 0];
-t_ap_fixed tmp[ 90 + 0];
-t_ap_fixed x[ 90 + 0];
-t_ap_fixed y[ 90 + 0];
-
-
 void init_array(int n,
-		t_ap_fixed *alpha,
-		t_ap_fixed *beta,
-		t_ap_fixed A[ 90 + 0][90 + 0],
-		t_ap_fixed B[ 90 + 0][90 + 0],
-		t_ap_fixed x[ 90 + 0])
+		double *alpha,
+		double *beta,
+		double A[ 250 + 0][250 + 0],
+		double B[ 250 + 0][250 + 0],
+		double x[ 250 + 0])
 {
   int i, j;
 
-  *alpha = (t_ap_fixed(1.5));
-  *beta = (t_ap_fixed(1.2));
+  *alpha = 1.5;
+  *beta = 1.2;
   for (i = 0; i < n; i++)
     {
-      x[i] = (t_ap_fixed)( i % n) / n;
+      x[i] = (double)( i % n) / n;
       for (j = 0; j < n; j++) {
-	A[i][j] = (t_ap_fixed) ((i*j+1) % n) / n;
-	B[i][j] = (t_ap_fixed) ((i*j+2) % n) / n;
+	A[i][j] = (double) ((i*j+1) % n) / n;
+	B[i][j] = (double) ((i*j+2) % n) / n;
       }
     }
 }
 
 
 void print_array(int n,
-		 t_ap_fixed y[ 90 + 0])
+		 double y[ 250 + 0])
 
 {
   int i;
@@ -45,7 +38,7 @@ void print_array(int n,
   fprintf(stderr, "begin dump: %s", "y");
   for (i = 0; i < n; i++) {
     if (i % 20 == 0) fprintf (stderr, "\n");
-    fprintf (stderr, "%0.6lf ", (float)y[i]);
+    fprintf (stderr, "%0.6lf ", y[i]);
   }
   fprintf(stderr, "\nend   dump: %s\n", "y");
   fprintf(stderr, "==END   DUMP_ARRAYS==\n");
@@ -55,13 +48,18 @@ void print_array(int n,
 int main(int argc, char** argv)
 {
 
-  int n = 90;
+  int n = 250;
 
 
-  t_ap_fixed alpha;
-  t_ap_fixed beta;
-   
-   
+  double alpha;
+  double beta;
+   double A[ 250 + 0][250 + 0];
+   double B[ 250 + 0][250 + 0];
+   double tmp[ 250 + 0];
+   double x[ 250 + 0];
+   double y[ 250 + 0];
+
+
   init_array (n, &alpha, &beta,
 	      A,
 	      B,

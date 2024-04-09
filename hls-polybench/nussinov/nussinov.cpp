@@ -1,12 +1,12 @@
 #include "nussinov.h"
 
 
-void kernel_nussinov( char seq[ 180 + 0],
-			   int table[ 180 + 0][180 + 0])
+void kernel_nussinov( char seq[ 500 + 0],
+			   int table[ 500 + 0][500 + 0])
 {
   #pragma HLS top name=kernel_nussinov
 
-    const int n = 180;
+    const int n = 500;
 
   int i, j, k;
 
