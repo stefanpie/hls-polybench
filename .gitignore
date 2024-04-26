@@ -1,6 +1,7 @@
 .vscode
 .mypy_cache
 .ruff_cache
+**/__pycache__/
 
 test_temp_compile/
 test_temp_synth/

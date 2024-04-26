@@ -1,7 +1,0 @@
-CC=/tools/software/xilinx/Vitis_HLS/2023.1/lnx64/tools/clang-3.9/bin/clang++
-CFLAGS=-std=c++14 -O3 -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I/tools/software/xilinx/Vitis_HLS/2023.1/include -I/tools/software/xilinx/Vitis_HLS/2023.1/include/etc -I/tools/software/xilinx/Vitis_HLS/2023.1/include/utils
-all: covariance
-covariance: covariance_tb.cpp covariance.cpp
-	$(CC) $^ -o $@ $(CFLAGS)
-run: covariance
-	./covariance

@@ -338,7 +338,10 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "benchmarks_directory", type=Path, nargs="?", default=Path("./hls-polybench/")
+        "benchmarks_directory",
+        type=Path,
+        nargs="?",
+        default=Path("./hls_polybench__testing_small"),
     )
     parser.add_argument("-j", "--jobs", type=int, default=16)
     parser.add_argument("-r", "--report", action="store_true", default=False)

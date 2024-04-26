@@ -724,12 +724,23 @@ def main(args):
 
     polybench_dataset_size = args.dataset_size
 
-    polybench_distribution_fp = args.polybench_distribution
-    output_dir = args.output_directory
+    polybench_distribution_fp = args.benchmark_distribution
+    output_dir_arg = args.output_directory
+    if args.output_suffix:
+        output_suffix = args.output_suffix
+        output_dir = Path((str(output_dir_arg) + output_suffix))
+    else:
+        output_dir = Path(output_dir_arg)
+
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_file = args.output_file
+
+    output_file_arg = args.output_file
+    if args.output_suffix:
+        output_file = Path(str(output_file_arg) + output_suffix + ".tar.gz")
+    else:
+        output_file = Path(output_file_arg + ".tar.gz")
 
     vitis_hls_include_dir = get_vitis_hls_include_dir()
     vitis_clang_pp_bin_path = get_vitis_hls_clang_pp_path()
@@ -1265,15 +1276,15 @@ def main(args):
     kernel_header_locs_start = [match.span()[0] for match in kernel_header_matches]
     for i in range(len(kernel_header_locs_start)):
         if i < len(kernel_header_locs_start) - 1:
-            kernel_descriptions[
-                kernel_header_match_text[i]
-            ] = kernel_description_md_text[
-                kernel_header_locs_start[i] : kernel_header_locs_start[i + 1]
-            ]
+            kernel_descriptions[kernel_header_match_text[i]] = (
+                kernel_description_md_text[
+                    kernel_header_locs_start[i] : kernel_header_locs_start[i + 1]
+                ]
+            )
         else:
-            kernel_descriptions[
-                kernel_header_match_text[i]
-            ] = kernel_description_md_text[kernel_header_locs_start[i] :]
+            kernel_descriptions[kernel_header_match_text[i]] = (
+                kernel_description_md_text[kernel_header_locs_start[i] :]
+            )
 
     kernel_descriptions = {k: v.strip() for k, v in kernel_descriptions.items()}
 
@@ -1295,7 +1306,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "polybench_distribution",
+        "benchmark_distribution",
         type=Path,
         nargs="?",
         default=Path("polybench-c-4.2.1-beta.tar.gz"),
@@ -1305,14 +1316,15 @@ if __name__ == "__main__":
         "output_directory",
         type=Path,
         nargs="?",
-        default=Path("./hls-polybench/"),
+        default=Path("./hls_polybench/"),
         help="Generated output directory with processed benchmarks",
     )
+
     parser.add_argument(
         "output_file",
         type=Path,
         nargs="?",
-        default=Path("./hls-polybench.tar.gz"),
+        default=Path("./hls_polybench"),
         help="Generated output tar.gz file with processed benchmarks",
     )
     parser.add_argument(
@@ -1340,6 +1352,12 @@ if __name__ == "__main__":
         default="MEDIUM",
         choices=POLYBENCH_DATASET_SIZES,
         help=f"Dataset size to use based on the sizes defined by polybench, {POLYBENCH_DATASET_SIZES}, or the DEFAULT size for each individual benchmark",
+    )
+
+    # optional
+    parser.add_argument(
+        "--output-suffix",
+        type=str,
     )
 
     args = parser.parse_args()
