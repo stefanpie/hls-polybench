@@ -719,6 +719,9 @@ def remove_int_decls_from_kernel_declaration(c_fp, int_decls):
     c_fp.write_text(c_text)
 
 
+BENCHMARKS_TO_EXCLUDE = ["deriche", "adi"]
+
+
 def main(args):
     n_jobs = args.jobs
 
@@ -865,6 +868,12 @@ def main(args):
     benchmark_list_fp = fp_utils / "benchmark_list"
     benchmark_list = [
         Path(line.strip()) for line in benchmark_list_fp.read_text().splitlines()
+    ]
+
+    benchmark_list = [
+        benchmark
+        for benchmark in benchmark_list
+        if benchmark.stem not in BENCHMARKS_TO_EXCLUDE
     ]
 
     def process_benchmark(benchmark: Path):
@@ -1241,21 +1250,23 @@ def main(args):
         fix_spacing(new_benchmark_dir / (benchmark_name + "_tb.cpp"))
         fix_spacing(new_benchmark_dir / (benchmark_name + ".h"))
 
-        makefile_text = ""
-        makefile_text += f"CC={vitis_clang_pp_bin_path}\n"
-        makefile_text += f"CFLAGS=-std=c++14 -O3 -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'}\n"
-        makefile_text += f"all: {benchmark_name}\n"
-        makefile_text += (
-            f"{benchmark_name}: {benchmark_name}_tb.cpp {benchmark_name}.cpp\n"
-        )
-        makefile_text += "\t$(CC) $^ -o $@ $(CFLAGS)\n"
-        makefile_text += f"run: {benchmark_name}\n"
-        makefile_text += f"\t./{benchmark_name}\n"
+        # makefile_text = ""
+        # makefile_text += f"CC={vitis_clang_pp_bin_path}\n"
+        # makefile_text += f"CFLAGS=-std=c++14 -O3 -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'}\n"
+        # makefile_text += f"all: {benchmark_name}\n"
+        # makefile_text += (
+        #     f"{benchmark_name}: {benchmark_name}_tb.cpp {benchmark_name}.cpp\n"
+        # )
+        # makefile_text += "\t$(CC) $^ -o $@ $(CFLAGS)\n"
+        # makefile_text += f"run: {benchmark_name}\n"
+        # makefile_text += f"\t./{benchmark_name}\n"
 
-        makefile_fp = new_benchmark_dir / "Makefile"
-        makefile_fp.write_text(makefile_text)
+        # makefile_fp = new_benchmark_dir / "Makefile"
+        # makefile_fp.write_text(makefile_text)
 
-        # benchmark_size =
+        top_fn_name = f"kernel_{benchmark_name.replace('-', '_')}"
+        top_fn_name_fp = new_benchmark_dir / "top.txt"
+        top_fn_name_fp.write_text(top_fn_name)
 
     Parallel(n_jobs=n_jobs)(
         delayed(process_benchmark)(benchmark) for benchmark in benchmark_list

@@ -37,11 +37,13 @@ def hls_synth_benchmark(
     tcl_script_txt += f"add_files {(benchmark_name + '.cpp')}\n"
     tcl_script_txt += f"add_files {(benchmark_name + '.h')}\n"
     tcl_script_txt += f"add_files {(benchmark_name + '_tb.cpp')} -tb\n"
-    tcl_script_txt += "open_solution solution1\n"
+    tcl_script_txt += "open_solution solution\n"
     tcl_script_txt += f"set_top kernel_{benchmark_name_c}\n"
     tcl_script_txt += "set_part {xc7z020clg484-1}\n"
     tcl_script_txt += "create_clock -period 10 -name default\n"
     tcl_script_txt += "csynth_design\n"
+    tcl_script_txt += "export_design -format ip_catalog -rtl verilog\n"
+
     tcl_script_txt += "exit\n"
     tcl_script.write_text(tcl_script_txt)
 
@@ -57,7 +59,7 @@ def hls_synth_benchmark(
         csynth_rpt_fp = (
             temp_dir_path
             / f"test_proj_{benchmark_name}"
-            / "solution1"
+            / "solution"
             / "syn"
             / "report"
             / "csynth.rpt"

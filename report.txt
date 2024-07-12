@@ -25,18 +25,6 @@ ERROR     :
     }
 }
 
-BENCHMARK : adi
-COMPILE   : 0
-RUN       : 0
-ERROR     :
-{
-    "u": {
-        "mae": 0.0,
-        "mse": 0.0,
-        "rmse": 0.0
-    }
-}
-
 BENCHMARK : atax
 COMPILE   : 0
 RUN       : 0
