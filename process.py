@@ -747,7 +747,7 @@ def main(args):
     if args.output_suffix:
         output_file = Path(str(output_file_arg) + output_suffix + ".tar.gz")
     else:
-        output_file = Path(output_file_arg + ".tar.gz")
+        output_file = Path(str(output_file_arg) + ".tar.gz")
 
     vitis_hls_include_dir = get_vitis_hls_include_dir()
     vitis_clang_pp_bin_path = get_vitis_hls_clang_pp_path()
