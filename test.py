@@ -51,13 +51,25 @@ def hls_synth_benchmark(
     tcl_script_txt += "exit\n"
     tcl_script.write_text(tcl_script_txt)
 
-    p = subprocess.run(
-        ["vitis_hls", "-f", tcl_script.resolve()],
-        cwd=temp_dir_path,
-        text=True,
-        capture_output=True,
-    )
-    print(f"{benchmark_name}: {p.returncode}")
+    # synthesis occasionally fails transiently when many run in parallel, so retry once
+    for attempt in range(2):
+        p = subprocess.run(
+            ["vitis_hls", "-f", tcl_script.resolve()],
+            cwd=temp_dir_path,
+            text=True,
+            capture_output=True,
+        )
+        print(f"{benchmark_name}: {p.returncode}")
+        (temp_dir_path / f"vitis_hls_attempt{attempt}.log").write_text(
+            p.stdout + p.stderr
+        )
+        if p.returncode == 0:
+            break
+        print(f"HLS synthesis attempt {attempt} failed for {benchmark_name}")
+
+    if p.returncode != 0:
+        log_tail = "\n".join((p.stdout + p.stderr).splitlines()[-20:])
+        print(f"Last lines of vitis_hls output for {benchmark_name}:\n{log_tail}")
 
     if p.returncode == 0:
         csynth_rpt_fp = (
@@ -172,9 +184,6 @@ def compile_benchmark(
     vitis_hls_install_dir = get_vitis_hls_install_dir()
     # print(f"Using vitis_hls install dir {vitis_hls_install_dir}")
 
-    # clang 3.9 segfaults in LoopLoadElimination on adi at any -O1 and above
-    opt_level = "-O0" if benchmark_name == "adi" else "-O3"
-
     p_compile = subprocess.run(
         [
             str(clang_bin_path),
@@ -183,7 +192,7 @@ def compile_benchmark(
             "-o",
             benchmark_name,
             "-std=c++14",
-            opt_level,
+            "-O3",
             "-g",
             "-fPIC",
             "-fPIE",
@@ -208,7 +217,7 @@ def compile_benchmark(
 
     makefile_text = ""
     makefile_text += f"CC={clang_bin_path}\n"
-    makefile_text += f"CFLAGS=-std=c++14 {opt_level} -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'} -L{vitis_hls_install_dir}/lnx64/lib/csim -lhlsmc++-CLANG39 -Wl,-rpath,{vitis_hls_install_dir}/lnx64/lib/csim -Wl,-rpath,{vitis_hls_install_dir}/lnx64/tools/fpo_v7_1\n"
+    makefile_text += f"CFLAGS=-std=c++14 -O3 -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'} -L{vitis_hls_install_dir}/lnx64/lib/csim -lhlsmc++-CLANG39 -Wl,-rpath,{vitis_hls_install_dir}/lnx64/lib/csim -Wl,-rpath,{vitis_hls_install_dir}/lnx64/tools/fpo_v7_1\n"
     makefile_text += f"all: {benchmark_name}\n"
     makefile_text += f"{benchmark_name}: {benchmark_name}_tb.cpp {benchmark_name}.cpp\n"
     makefile_text += "\t$(CC) $^ -o $@ $(CFLAGS)\n"
@@ -348,10 +357,21 @@ def main(args):
         report_text += "Polybench HLS Processed Test Report\n"
         report_text += "----------------------------------\n"
         report_text += "\n"
-        for benchmark, return_code_compile, return_code_run, error in zip(
-            benchmarks_to_test, return_codes_compile, return_codes_run, data_error
+        for (
+            benchmark,
+            return_code_synth,
+            return_code_compile,
+            return_code_run,
+            error,
+        ) in zip(
+            benchmarks_to_test,
+            return_codes_hls_synthesis,
+            return_codes_compile,
+            return_codes_run,
+            data_error,
         ):
             report_text += f"BENCHMARK : {benchmark.stem}\n"
+            report_text += f"SYNTH     : {return_code_synth}\n"
             report_text += f"COMPILE   : {return_code_compile}\n"
             report_text += f"RUN       : {return_code_run}\n"
             if return_code_compile == 0 and return_code_run == 0:

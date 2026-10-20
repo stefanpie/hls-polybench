@@ -760,6 +760,100 @@ FPX_INIT_PATCHES: dict[str, list[tuple[str, str]]] = {
 }
 
 
+
+# Semantics-preserving kernel rewrites applied to the original polybench source (float
+# and fixed). The bundled Vitis clang crashes (stack overflow in its Loop Load
+# Elimination pass) on adi when the forward loop carries two loop-to-loop values
+# (p[i][j-1] and q[i][j-1]) through memory and the trip count is too large to be fully
+# unrolled. Carrying the values in scalars removes the store-to-load forwarding
+# candidates the pass is crashing on, with the same operations in the same order.
+KERNEL_PATCHES: dict[str, list[tuple[str, str]]] = {
+    "adi": [
+        (
+            "  DATA_TYPE a, b, c, d, e, f;\n",
+            "  DATA_TYPE a, b, c, d, e, f;\n  DATA_TYPE pm1, qm1, pj, qj, wn, wj;\n",
+        ),
+        (
+            """      q[i][0] = v[0][i];
+      for (j=1; j<_PB_N-1; j++) {
+        p[i][j] = -c / (a*p[i][j-1]+b);
+        q[i][j] = (-d*u[j][i-1]+(SCALAR_VAL(1.0)+SCALAR_VAL(2.0)*d)*u[j][i] - f*u[j][i+1]-a*q[i][j-1])/(a*p[i][j-1]+b);
+      }
+
+      v[_PB_N-1][i] = SCALAR_VAL(1.0);
+      for (j=_PB_N-2; j>=1; j--) {
+        v[j][i] = p[i][j] * v[j+1][i] + q[i][j];
+      }
+""",
+            """      q[i][0] = v[0][i];
+      pm1 = p[i][0];
+      qm1 = q[i][0];
+      for (j=1; j<_PB_N-1; j++) {
+        pj = -c / (a*pm1+b);
+        qj = (-d*u[j][i-1]+(SCALAR_VAL(1.0)+SCALAR_VAL(2.0)*d)*u[j][i] - f*u[j][i+1]-a*qm1)/(a*pm1+b);
+        p[i][j] = pj;
+        q[i][j] = qj;
+        pm1 = pj;
+        qm1 = qj;
+      }
+
+      v[_PB_N-1][i] = SCALAR_VAL(1.0);
+      wn = v[_PB_N-1][i];
+      for (j=_PB_N-2; j>=1; j--) {
+        wj = p[i][j] * wn + q[i][j];
+        v[j][i] = wj;
+        wn = wj;
+      }
+""",
+        ),
+        (
+            """      q[i][0] = u[i][0];
+      for (j=1; j<_PB_N-1; j++) {
+        p[i][j] = -f / (d*p[i][j-1]+e);
+        q[i][j] = (-a*v[i-1][j]+(SCALAR_VAL(1.0)+SCALAR_VAL(2.0)*a)*v[i][j] - c*v[i+1][j]-d*q[i][j-1])/(d*p[i][j-1]+e);
+      }
+      u[i][_PB_N-1] = SCALAR_VAL(1.0);
+      for (j=_PB_N-2; j>=1; j--) {
+        u[i][j] = p[i][j] * u[i][j+1] + q[i][j];
+      }
+""",
+            """      q[i][0] = u[i][0];
+      pm1 = p[i][0];
+      qm1 = q[i][0];
+      for (j=1; j<_PB_N-1; j++) {
+        pj = -f / (d*pm1+e);
+        qj = (-a*v[i-1][j]+(SCALAR_VAL(1.0)+SCALAR_VAL(2.0)*a)*v[i][j] - c*v[i+1][j]-d*qm1)/(d*pm1+e);
+        p[i][j] = pj;
+        q[i][j] = qj;
+        pm1 = pj;
+        qm1 = qj;
+      }
+      u[i][_PB_N-1] = SCALAR_VAL(1.0);
+      wn = u[i][_PB_N-1];
+      for (j=_PB_N-2; j>=1; j--) {
+        wj = p[i][j] * wn + q[i][j];
+        u[i][j] = wj;
+        wn = wj;
+      }
+""",
+        ),
+    ],
+}
+
+
+def apply_kernel_patches(polybench_dir: Path):
+    for benchmark_name, patches in KERNEL_PATCHES.items():
+        c_fps = list(polybench_dir.rglob(f"{benchmark_name}/{benchmark_name}.c"))
+        if len(c_fps) != 1:
+            raise FileNotFoundError(f"Expected one {benchmark_name}.c in {polybench_dir}")
+        c_text = c_fps[0].read_text()
+        for old_text, new_text in patches:
+            if c_text.count(old_text) != 1:
+                raise ValueError(f"Could not find kernel text to patch in {c_fps[0]}")
+            c_text = c_text.replace(old_text, new_text)
+        c_fps[0].write_text(c_text)
+
+
 def make_gramschmidt_square(polybench_dir: Path):
     # gramschmidt has N > M columns, so at most M of them are linearly independent. The
     # remaining columns have a zero pivot and the reference output for them is
@@ -844,6 +938,7 @@ def main(args):
     fp_polybench_h = fp_utils / "polybench.h"
     fp_polybench_c = fp_utils / "polybench.c"
 
+    apply_kernel_patches(tmp_dir)
     if using_fpx:
         apply_fpx_init_patches(tmp_dir)
 

@@ -120,9 +120,6 @@ def compile_and_run_benchmark(
     clang_bin_path = get_vitis_hls_clang_pp_path()
     vitis_hls_install_dir = get_vitis_hls_install_dir()
 
-    # clang 3.9 segfaults in LoopLoadElimination on adi at any -O1 and above
-    opt_level = "-O0" if benchmark_name == "adi" else "-O3"
-
     p_compile = subprocess.run(
         [
             str(clang_bin_path),
@@ -131,7 +128,7 @@ def compile_and_run_benchmark(
             "-o",
             benchmark_name,
             "-std=c++14",
-            opt_level,
+            "-O3",
             "-g",
             "-fPIC",
             "-fPIE",
@@ -156,7 +153,7 @@ def compile_and_run_benchmark(
 
     makefile_text = ""
     makefile_text += f"CC={clang_bin_path}\n"
-    makefile_text += f"CFLAGS=-std=c++14 {opt_level} -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'} -L{vitis_hls_install_dir}/lnx64/lib/csim -lhlsmc++-CLANG39 -Wl,-rpath,{vitis_hls_install_dir}/lnx64/lib/csim -Wl,-rpath,{vitis_hls_install_dir}/lnx64/tools/fpo_v7_1\n"
+    makefile_text += f"CFLAGS=-std=c++14 -O3 -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'} -L{vitis_hls_install_dir}/lnx64/lib/csim -lhlsmc++-CLANG39 -Wl,-rpath,{vitis_hls_install_dir}/lnx64/lib/csim -Wl,-rpath,{vitis_hls_install_dir}/lnx64/tools/fpo_v7_1\n"
     makefile_text += f"all: {benchmark_name}\n"
     makefile_text += f"{benchmark_name}: {benchmark_name}_tb.cpp {benchmark_name}.cpp\n"
     makefile_text += "\t$(CC) $^ -o $@ $(CFLAGS)\n"
@@ -282,24 +279,42 @@ def hls_synth_benchmark(
     tcl_script_txt += "exit\n"
     tcl_script.write_text(tcl_script_txt)
 
-    p = subprocess.run(
-        ["vitis_hls", "-f", tcl_script.resolve()],
-        cwd=temp_dir_path,
-        text=True,
-        capture_output=True,
-    )
-    print(f"{benchmark_name}: {p.returncode}")
+    # synthesis occasionally fails transiently when many run in parallel, so retry once
+    for attempt in range(2):
+        p = subprocess.run(
+            ["vitis_hls", "-f", tcl_script.resolve()],
+            cwd=temp_dir_path,
+            text=True,
+            capture_output=True,
+        )
+        print(f"{benchmark_name}: {p.returncode}")
+        (temp_dir_path / "vitis_hls.log").write_text(p.stdout + p.stderr)
+        if p.returncode == 0:
+            break
+        print(f"HLS synthesis attempt {attempt} failed for {benchmark_name}")
 
     if p.returncode != 0:
-        raise RuntimeError("HLS Synthesis failed")
+        log_tail = "\n".join((p.stdout + p.stderr).splitlines()[-20:])
+        raise RuntimeError(
+            f"HLS Synthesis failed for {benchmark_name} (exit {p.returncode}):\n{log_tail}"
+        )
 
     csynth_rpt_dir_fp = (
         temp_dir_path / f"test_proj_{benchmark_name}" / "solution" / "syn" / "report"
     )
 
+    report_fps = sorted(fp for fp in csynth_rpt_dir_fp.rglob("*") if fp.is_file())
+    if len(report_fps) == 0:
+        raise RuntimeError(f"No synthesis reports found in {csynth_rpt_dir_fp}")
+
     report_archive_fp = temp_dir_path / "synth_report.zip"
     with zipfile.ZipFile(report_archive_fp, "w", zipfile.ZIP_DEFLATED) as f:
-        f.write(csynth_rpt_dir_fp, arcname=csynth_rpt_dir_fp.name)
+        for report_fp in report_fps:
+            f.write(
+                report_fp,
+                arcname=csynth_rpt_dir_fp.name
+                / report_fp.relative_to(csynth_rpt_dir_fp),
+            )
 
     ip_dir_fp = (
         temp_dir_path / f"test_proj_{benchmark_name}" / "solution" / "impl" / "ip"
