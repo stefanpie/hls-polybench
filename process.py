@@ -16,14 +16,13 @@ def get_vitis_hls_clang_pp_path() -> Path:
     if vitis_hls_bin_path_str is None:
         raise RuntimeError("vitis_hls not found in PATH")
     vitis_hls_bin_path = Path(vitis_hls_bin_path_str)
-    vitis_hls_clang_pp_path = (
-        vitis_hls_bin_path.parent.parent
-        / "lnx64"
-        / "tools"
-        / "clang-3.9"
-        / "bin"
-        / "clang++"
-    )
+    vitis_hls_tools_dir = vitis_hls_bin_path.parent.parent / "lnx64" / "tools"
+    # Vitis HLS 2024.1+ renamed clang-3.9 to clang-3.9-csynth
+    vitis_hls_clang_pp_path = vitis_hls_tools_dir / "clang-3.9" / "bin" / "clang++"
+    if not vitis_hls_clang_pp_path.exists():
+        vitis_hls_clang_pp_path = (
+            vitis_hls_tools_dir / "clang-3.9-csynth" / "bin" / "clang++"
+        )
     if not vitis_hls_clang_pp_path.exists():
         raise RuntimeError(
             f"Could not find vitis_hls clang++ bin at {vitis_hls_clang_pp_path}"
@@ -283,7 +282,9 @@ def replace_array_declarations(c_fp: Path):
             var = arg_list[0]
             d_type = arg_list[1]
             dims = arg_list[2:]
-            new_line = f"  {d_type} POLYBENCH_{len(dims)//2}D({var},{','.join(dims)});"
+            new_line = (
+                f"  {d_type} POLYBENCH_{len(dims) // 2}D({var},{','.join(dims)});"
+            )
             new_lines.append(new_line)
         else:
             new_lines.append(line)
@@ -720,7 +721,73 @@ def remove_int_decls_from_kernel_declaration(c_fp, int_decls):
     c_fp.write_text(c_text)
 
 
-BENCHMARKS_TO_EXCLUDE = ["deriche", "adi"]
+BENCHMARKS_TO_EXCLUDE = []
+
+
+
+# Init data changes for the fixed-point (ap_fixed<32,16>) builds. The original init
+# values make intermediate sums overflow the fixed-point range, so these rescale the
+# inputs. They are applied to the original polybench source before the golden
+# tb_data.txt is generated, so the reference output uses the same inputs.
+FPX_INIT_PATCHES: dict[str, list[tuple[str, str]]] = {
+    "gemver": [("u1[i] = i;", "u1[i] = ((i+1)/fn)/1.0;")],
+    "gramschmidt": [
+        (
+            "A[i][j] = (((DATA_TYPE) ((i*j) % m) / m )*100) + 10;",
+            "A[i][j] = (((DATA_TYPE) ((i*j) % m) / m )*4) + 1 + ((i == j) ? 4 : 0);",
+        )
+    ],
+    "correlation": [
+        (
+            "data[i][j] = (DATA_TYPE)(i*j)/M + i;",
+            "data[i][j] = ((DATA_TYPE)(i*j)/M + i)/32.0;",
+        )
+    ],
+    "covariance": [
+        (
+            "data[i][j] = ((DATA_TYPE) i*j) / M;",
+            "data[i][j] = (((DATA_TYPE) i*j) / M)/32.0;",
+        )
+    ],
+    "durbin": [("r[i] = (n+1-i);", "r[i] = (n+1-i)/(2.0*(n+1));")],
+    # 65535 and 65536 do not fit in ap_fixed<32,16> and wrap to negative values
+    "deriche": [
+        (
+            "imgIn[i][j] = (DATA_TYPE) ((313*i+991*j)%65536) / 65535.0f;",
+            "imgIn[i][j] = (DATA_TYPE) ((313*i+991*j)%256) / 255.0f;",
+        )
+    ],
+}
+
+
+def make_gramschmidt_square(polybench_dir: Path):
+    # gramschmidt has N > M columns, so at most M of them are linearly independent. The
+    # remaining columns have a zero pivot and the reference output for them is
+    # division by roundoff noise, which fixed-point cannot reproduce. Use N = M.
+    h_fps = list(polybench_dir.rglob("gramschmidt/gramschmidt.h"))
+    if len(h_fps) != 1:
+        raise FileNotFoundError(f"Expected one gramschmidt.h in {polybench_dir}")
+    h_text = h_fps[0].read_text()
+    h_text, n_subs = re.subn(
+        r"(#\s+define M (\d+)\n#\s+define N )\d+", r"\g<1>\g<2>", h_text
+    )
+    if n_subs == 0:
+        raise ValueError(f"Could not find M and N defines in {h_fps[0]}")
+    h_fps[0].write_text(h_text)
+
+
+def apply_fpx_init_patches(polybench_dir: Path):
+    make_gramschmidt_square(polybench_dir)
+    for benchmark_name, patches in FPX_INIT_PATCHES.items():
+        c_fps = list(polybench_dir.rglob(f"{benchmark_name}/{benchmark_name}.c"))
+        if len(c_fps) != 1:
+            raise FileNotFoundError(f"Expected one {benchmark_name}.c in {polybench_dir}")
+        c_text = c_fps[0].read_text()
+        for old_text, new_text in patches:
+            if old_text not in c_text:
+                raise ValueError(f"Could not find init line to patch in {c_fps[0]}")
+            c_text = c_text.replace(old_text, new_text)
+        c_fps[0].write_text(c_text)
 
 
 def main(args):
@@ -749,8 +816,8 @@ def main(args):
     else:
         output_file = Path(str(output_file_arg) + ".tar.gz")
 
-    vitis_hls_include_dir = get_vitis_hls_include_dir()
-    vitis_clang_pp_bin_path = get_vitis_hls_clang_pp_path()
+    _vitis_hls_include_dir = get_vitis_hls_include_dir()
+    _vitis_clang_pp_bin_path = get_vitis_hls_clang_pp_path()
 
     if not polybench_distribution_fp.exists():
         raise FileNotFoundError(
@@ -776,6 +843,9 @@ def main(args):
     fp_utils = tmp_dir / "utilities"
     fp_polybench_h = fp_utils / "polybench.h"
     fp_polybench_c = fp_utils / "polybench.c"
+
+    if using_fpx:
+        apply_fpx_init_patches(tmp_dir)
 
     # build and run all benchmarks
     # capture std out
@@ -1174,12 +1244,18 @@ def main(args):
         if benchmark_name == "gramschmidt" and using_fpx:
             # special case in gramschmidt to fix weird casting rules between int and ap_fixed based on int loop index variables
             tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
-            # (((t_ap_fixed) ((i*j) % m) / m )*100) + 10
+            # (((t_ap_fixed) ((i*j) % m) / m )*4) + 1 + ((i == j) ? 4 : 0)
             replace_text_exact(
                 tb_fp,
-                "(((t_ap_fixed) ((i*j) % m) / m )*100) + 10",
-                "(( (t_ap_fixed(i*j % m)) / (t_ap_fixed(m)) ) * (t_ap_fixed(100.0)) ) + (t_ap_fixed(10.0))",
+                "(((t_ap_fixed) ((i*j) % m) / m )*4) + 1 + ((i == j) ? 4 : 0)",
+                "(( (t_ap_fixed(i*j % m)) / (t_ap_fixed(m)) ) * (t_ap_fixed(4.0)) ) + (t_ap_fixed(1.0)) + ((i == j) ? 4 : 0)",
             )
+
+        if benchmark_name == "deriche" and using_fpx:
+            # special case in deriche: the testbench global array y1 clashes with
+            # the y1() bessel function declared in math.h
+            tb_fp = new_benchmark_dir / (benchmark_name + "_tb.cpp")
+            tb_fp.write_text(re.sub(r"\by1\b", "y1_arr", tb_fp.read_text()))
 
         if benchmark_name == "ludcmp" and using_fpx:
             # special case in ludcmp to fix weird casting rules between int and ap_fixed based on int loop index variables

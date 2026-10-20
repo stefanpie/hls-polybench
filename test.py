@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -37,10 +38,13 @@ def hls_synth_benchmark(
     tcl_script_txt += f"add_files {(benchmark_name + '.cpp')}\n"
     tcl_script_txt += f"add_files {(benchmark_name + '.h')}\n"
     tcl_script_txt += f"add_files {(benchmark_name + '_tb.cpp')} -tb\n"
-    tcl_script_txt += "open_solution solution\n"
+    tcl_script_txt += "open_solution solution -flow_target vivado\n"
     tcl_script_txt += f"set_top kernel_{benchmark_name_c}\n"
     tcl_script_txt += "set_part {xc7z020clg484-1}\n"
     tcl_script_txt += "create_clock -period 10 -name default\n"
+    tcl_script_txt += "config_compile -pipeline_loops 0\n"
+    tcl_script_txt += "config_unroll -tripcount_threshold 0\n"
+    tcl_script_txt += "config_array_partition -throughput_driven off\n"
     tcl_script_txt += "csynth_design\n"
     tcl_script_txt += "export_design -format ip_catalog -rtl verilog\n"
 
@@ -83,15 +87,29 @@ def get_vitis_hls_clang_pp_path() -> Path:
     if vitis_hls_bin_path_str is None:
         raise RuntimeError("vitis_hls not found in PATH")
     vitis_hls_bin_path = Path(vitis_hls_bin_path_str)
-    vitis_hls_clang_pp_path = (
-        vitis_hls_bin_path.parent.parent
-        / "lnx64"
-        / "tools"
-        / "clang-3.9"
-        / "bin"
-        / "clang++"
-    )
+    vitis_hls_tools_dir = vitis_hls_bin_path.parent.parent / "lnx64" / "tools"
+    # Vitis HLS 2024.1+ renamed clang-3.9 to clang-3.9-csynth
+    vitis_hls_clang_pp_path = vitis_hls_tools_dir / "clang-3.9" / "bin" / "clang++"
+    if not vitis_hls_clang_pp_path.exists():
+        vitis_hls_clang_pp_path = (
+            vitis_hls_tools_dir / "clang-3.9-csynth" / "bin" / "clang++"
+        )
     return vitis_hls_clang_pp_path
+
+
+def get_vitis_hls_clang_env() -> dict[str, str]:
+    # the bundled clang needs the boost/tinfo libs shipped in <vitis_hls>/lib/lnx64.o
+    vitis_hls_bin_path_str = shutil.which("vitis_hls")
+    if vitis_hls_bin_path_str is None:
+        raise RuntimeError("vitis_hls not found in PATH")
+    lib_dir = Path(vitis_hls_bin_path_str).parent.parent / "lib" / "lnx64.o"
+    lib_dirs = [lib_dir, lib_dir / "Rhel" / "9"]
+    env = os.environ.copy()
+    ld_library_path = [str(d) for d in lib_dirs if d.exists()]
+    if env.get("LD_LIBRARY_PATH"):
+        ld_library_path.append(env["LD_LIBRARY_PATH"])
+    env["LD_LIBRARY_PATH"] = ":".join(ld_library_path)
+    return env
 
 
 def get_vitis_hls_install_dir() -> Path:
@@ -154,6 +172,9 @@ def compile_benchmark(
     vitis_hls_install_dir = get_vitis_hls_install_dir()
     # print(f"Using vitis_hls install dir {vitis_hls_install_dir}")
 
+    # clang 3.9 segfaults in LoopLoadElimination on adi at any -O1 and above
+    opt_level = "-O0" if benchmark_name == "adi" else "-O3"
+
     p_compile = subprocess.run(
         [
             str(clang_bin_path),
@@ -162,18 +183,22 @@ def compile_benchmark(
             "-o",
             benchmark_name,
             "-std=c++14",
-            "-O3",
+            opt_level,
             "-g",
             "-fPIC",
             "-fPIE",
             "-lm",
             "-Wl,--sysroot=/",
-            # f'-L"{vitis_hls_install_dir}/lnx64/lib/csim" -lhlsmc++-CLANG39 -Wl,-rpath,"{vitis_hls_install_dir}/lnx64/lib/csim" -Wl,-rpath,"{vitis_hls_install_dir}/lnx64/tools/fpo_v7_1"',
+            f"-L{vitis_hls_install_dir}/lnx64/lib/csim",
+            "-lhlsmc++-CLANG39",
+            f"-Wl,-rpath,{vitis_hls_install_dir}/lnx64/lib/csim",
+            f"-Wl,-rpath,{vitis_hls_install_dir}/lnx64/tools/fpo_v7_1",
             f"-I{vitis_hls_include_dir}",
             f"-I{vitis_hls_include_dir / 'etc'}",
             f"-I{vitis_hls_include_dir / 'utils'}",
         ],
         cwd=Path(temp_dir_path),
+        env=get_vitis_hls_clang_env(),
         text=True,
         capture_output=True,
     )
@@ -183,7 +208,7 @@ def compile_benchmark(
 
     makefile_text = ""
     makefile_text += f"CC={clang_bin_path}\n"
-    makefile_text += f"CFLAGS=-std=c++14 -O3 -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'}\n"
+    makefile_text += f"CFLAGS=-std=c++14 {opt_level} -g -fPIC -fPIE -lm -Wl,--sysroot=/ -I{vitis_hls_include_dir} -I{vitis_hls_include_dir / 'etc'} -I{vitis_hls_include_dir / 'utils'} -L{vitis_hls_install_dir}/lnx64/lib/csim -lhlsmc++-CLANG39 -Wl,-rpath,{vitis_hls_install_dir}/lnx64/lib/csim -Wl,-rpath,{vitis_hls_install_dir}/lnx64/tools/fpo_v7_1\n"
     makefile_text += f"all: {benchmark_name}\n"
     makefile_text += f"{benchmark_name}: {benchmark_name}_tb.cpp {benchmark_name}.cpp\n"
     makefile_text += "\t$(CC) $^ -o $@ $(CFLAGS)\n"
@@ -286,7 +311,7 @@ def main(args):
         shutil.rmtree(temp_dir_synth)
 
     benchmarks_to_skip = [
-        "deriche",
+        # "deriche",
     ]
 
     benchmarks_directory = args.benchmarks_directory
